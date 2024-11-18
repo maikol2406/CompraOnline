@@ -1,4 +1,5 @@
 using CompraOnline.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,14 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// Configuración de autenticación y cookies por Michael Acuña
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Usuarios/Login"; // Ruta para el inicio de sesión
+        options.AccessDeniedPath = "/Usuarios/AccessDenied"; // Ruta en caso de acceso denegado
+    });
 
 var app = builder.Build();
 
@@ -31,6 +40,7 @@ else
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication(); //Agregado Michael Acuña
 app.UseAuthorization();
 
 app.MapStaticAssets();

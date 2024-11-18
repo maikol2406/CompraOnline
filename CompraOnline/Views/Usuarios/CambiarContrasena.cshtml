@@ -1,0 +1,49 @@
+﻿@model CompraOnline.Models.Usuarios.CambioPassword
+
+@{
+    ViewData["Title"] = "CambiarContrasena";
+}
+
+<h1>CambiarContrasena</h1>
+
+<h4>CambioPassword</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CambiarContrasena" method="post">
+            @Html.AntiForgeryToken()
+            <section asp-validation-summary="ModelOnly" class="text-danger mb-3"></section>
+            <input type="hidden" asp-for="idUsuario" />
+
+            <section class="form-group mb-3">
+                <label asp-for="ContrasenaActual" class="control-label"></label>
+                <input asp-for="ContrasenaActual" class="form-control" type="password" placeholder="Ingrese su contraseña actual" />
+                <span asp-validation-for="ContrasenaActual" class="text-danger"></span>
+            </section>
+
+            <section class="form-group mb-3">
+                <label asp-for="NuevaContrasena" class="control-label"></label>
+                <input asp-for="NuevaContrasena" class="form-control" type="password" placeholder="Ingrese la nueva contraseña" />
+                <span asp-validation-for="NuevaContrasena" class="text-danger"></span>
+            </section>
+
+            <section class="form-group mb-3">
+                <label asp-for="ConfirmarContrasena" class="control-label"></label>
+                <input asp-for="ConfirmarContrasena" class="form-control" type="password" placeholder="Confirme la nueva contraseña" />
+                <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+            </section>
+
+            <section class="d-grid gap-2">
+                <input type="submit" value="Actualizar Contraseña" class="btn btn-primary" />
+            </section>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
