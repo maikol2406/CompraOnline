@@ -22,7 +22,7 @@ namespace CompraOnline.Data
             return builder;
         }
 
-        public static async Task<string> EncriptaContrasena(string password)
+        public static string EncriptaContrasena(string password)
         {
             using (var sha256 = SHA256.Create())
             {
@@ -75,7 +75,7 @@ namespace CompraOnline.Data
                     {
                         //cmd.Parameters.AddWithValue("@idUsuario", usuario.idUsuario);
                         cmd.Parameters.AddWithValue("@username", usuario.username);
-                        cmd.Parameters.AddWithValue("@password", await EncriptaContrasena(usuario.password));
+                        cmd.Parameters.AddWithValue("@password", EncriptaContrasena(usuario.password));
                         cmd.Parameters.AddWithValue("@nombreCompleto", usuario.nombreCompleto);
 
                         await cmd.ExecuteNonQueryAsync();
@@ -94,14 +94,17 @@ namespace CompraOnline.Data
             SqlConnectionStringBuilder builder = conexion();
             using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
             {
-                conn.Open();
+                await conn.OpenAsync();
 
-                var queryConsulta = "SELECT password FROM usuarios WHERE idUsuario = @idUsuario";
+                string passIngresado = EncriptaContrasena(passwordActual);
+                string passNuevoEncriptado = EncriptaContrasena(passwordNuevo);
+
+                string queryConsulta = "SELECT password FROM usuarios WHERE idUsuario = @idUsuario";
                 using (SqlCommand cmd = new SqlCommand(queryConsulta, conn))
                 {
                     cmd.Parameters.AddWithValue("@idUsuario", idUsuario);
-                    var passIngresado = EncriptaContrasena(passwordActual);
-                    var passAlmacenado = (string)await cmd.ExecuteScalarAsync();
+                    
+                    string passAlmacenado = (string)await cmd.ExecuteScalarAsync();
 
                     if (!passAlmacenado.Equals(passIngresado))
                     {
@@ -128,7 +131,7 @@ namespace CompraOnline.Data
             {
                 await conn.OpenAsync();
 
-                var passwordEncriptada = await EncriptaContrasena(login.password);
+                var passwordEncriptada = EncriptaContrasena(login.password);
 
                 var query = "SELECT COUNT(1) FROM dbo.Usuarios WHERE username = @username AND password = @password";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -138,8 +141,7 @@ namespace CompraOnline.Data
 
                     try
                     {
-                        int resultado = cmd.ExecuteNonQuery();
-                        resultado = resultado * -1;
+                        var resultado = await cmd.ExecuteScalarAsync();
                         return Convert.ToInt32(resultado) > 0;
                     }
                     catch (Exception e)
@@ -158,7 +160,7 @@ namespace CompraOnline.Data
             {
                 conn.Open();
 
-                var passwordEncriptada = await EncriptaContrasena(login.password);
+                var passwordEncriptada = EncriptaContrasena(login.password);
 
                 var query = "SELECT idUsuario, username, password, nombreCompleto FROM usuarios WHERE username = @username AND password = @password";
                 using (SqlCommand cmd = new SqlCommand(query, conn))

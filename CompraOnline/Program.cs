@@ -20,6 +20,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.LoginPath = "/Usuarios/Login"; // Ruta para el inicio de sesión
+        options.LogoutPath = "/Usuarios/Logout"; // Ruta para cierre de sesión
         options.AccessDeniedPath = "/Usuarios/AccessDenied"; // Ruta en caso de acceso denegado
     });
 

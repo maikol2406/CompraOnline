@@ -30,20 +30,10 @@ namespace CompraOnline.Controllers
                     ModelState.Remove(key);
                 }
 
-                if (string.IsNullOrWhiteSpace(login.username))
+                if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError("username", "El campo 'username' es obligatorio.");
+                    return View(login);
                 }
-
-                if (string.IsNullOrWhiteSpace(login.password))
-                {
-                    ModelState.AddModelError("password", "El campo 'password' es obligatorio.");
-                }
-
-                //if (!ModelState.IsValid)
-                //{
-                //    return View(login);
-                //}
 
                 bool isValidUser = await _baseDatos.ValidarUsuario(new Usuario
                 {
@@ -61,16 +51,19 @@ namespace CompraOnline.Controllers
 
                 try
                 {
-                    var claims = new List<Claim>
+                    if (usuario.username != null)
                     {
-                        new Claim(ClaimTypes.Name, usuario.nombreCompleto),
-                        new Claim("username", usuario.username.ToString()),
-                        new Claim("idUsuario", usuario.idUsuario.ToString())
-                    };
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, usuario.nombreCompleto),
+                            new Claim("username", usuario.username.ToString()),
+                            new Claim("idUsuario", usuario.idUsuario.ToString())
+                        };
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -78,22 +71,29 @@ namespace CompraOnline.Controllers
                     throw new Exception("Error " + e.Message);
                 }
 
-               
-
                 return RedirectToAction("Index", "Home");
 
             }
             catch
             {
-                return View();
+                return View(login);
             }
         }
 
         [HttpPost]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            HttpContext.SignOutAsync();
-            return RedirectToAction("Login", "Usuarios");
+            try
+            {
+                //await HttpContext.SignOutAsync();
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login", "Usuarios");
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception("Error " + e.Message);
+            }
         }
 
         // GET: UsuariosController/Create
@@ -143,7 +143,7 @@ namespace CompraOnline.Controllers
                 ViewData["ErrorMessage"] = "La contrasena actual es incorrecta.";
                 return View(cambio);
             }
-
+            Logout();
             return RedirectToAction(nameof(Login));
         }
     }
