@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CompraOnline.Models
+namespace CompraOnline.Models.Productos
 {
     public class Producto
     {
-        [Required]
+        //[Required]
         public int idProducto { get; set; }
         [Required]
         [Display(Name = "Nombre del producto")]
@@ -15,6 +15,9 @@ namespace CompraOnline.Models
         [Required]
         [Display(Name = "Precio")]
         public float precio { get; set; }
+        [Required]
+        [Display(Name = "Precio promoción")]
+        public float precioPromo { get; set; }
         [Required]
         [Display(Name = "Cantidas en stock")]
         public int stock { get; set; }

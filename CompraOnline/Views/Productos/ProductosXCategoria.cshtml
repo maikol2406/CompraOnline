@@ -1,0 +1,109 @@
+﻿@model IEnumerable<CompraOnline.Models.Productos.Producto>
+
+@{
+    ViewData["Title"] = "ProductosXCategoria";
+    var productosAgrupados = Model.GroupBy(p => p.idCategoria);
+    List<CompraOnline.Models.Productos.Categoria> listaCategorias = ViewBag.listaCategorias;
+}
+
+<h1>ProductosXCategoria</h1>
+
+<p>
+    <a asp-action="CrearProducto" class="btn btn-success">Crear un producto</a>
+</p>
+
+@foreach (var productoAgrupado in productosAgrupados)
+{
+    var categoria = listaCategorias.FirstOrDefault(c => c.idCategoria == productoAgrupado.Key);
+    if (categoria != null)
+    {
+        <section id="@categoria.idCategoria.ToString().ToLower()">
+            <h3>@categoria.nombreCategoria</h3>
+            <hr />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.idProducto)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.nombreProducto)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.descripcionProducto)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.precio)
+                        </th>
+                        @* @if (productoAgrupado.Any(p => p.promocion))
+                        {
+                            <th>
+                                @Html.DisplayNameFor(model => model.precioPromo)
+                            </th>
+                        } *@
+                        <th>
+                            @Html.DisplayNameFor(model => model.precioPromo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.stock)
+                        </th>
+                        <th>
+                            Categoría
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.promocion)
+                        </th>
+                        <th>
+                            Opciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var producto in productoAgrupado)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => producto.idProducto)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => producto.nombreProducto)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => producto.descripcionProducto)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => producto.precio)
+                            </td>
+                            @if (producto.promocion)
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => producto.precioPromo)
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    Sin promoción
+                                </td>
+                            }
+                            <td>
+                                @Html.DisplayFor(modelItem => producto.stock)
+                            </td>
+                            <td>
+                                @categoria.nombreCategoria
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => producto.promocion)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+    }
+}

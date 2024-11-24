@@ -1,4 +1,5 @@
-﻿using CompraOnline.Models;
+﻿using CompraOnline.Models.Pedidos;
+using CompraOnline.Models.Productos;
 using CompraOnline.Models.Usuarios;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -195,7 +196,7 @@ namespace CompraOnline.Data
             return null;
         }
 
-        public List<Pedido> obtenerPedidos(int idUsuario)
+        public async Task<List<Pedido>> obtenerPedidos(int idUsuario)
         {
             SqlConnectionStringBuilder builder = conexion();
             List<Pedido> listaPedidos = new List<Pedido>();
@@ -205,7 +206,7 @@ namespace CompraOnline.Data
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
-                    conn.OpenAsync();
+                    await conn.OpenAsync();
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -220,10 +221,112 @@ namespace CompraOnline.Data
                             listaPedidos.Add(pedido);
                         }
                     }
-                    conn.CloseAsync();
+                    await conn.CloseAsync();
                 }
             }
             return listaPedidos;
+        }
+
+        public async Task<List<Producto>> obtenerProductos()
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Producto> listaProductos = new List<Producto>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT * FROM Productos";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Producto producto = new Producto();
+                            producto.idProducto = Convert.ToInt32(reader["idProducto"].ToString());
+                            producto.nombreProducto = Convert.ToString(reader["nombreProducto"].ToString());
+                            producto.descripcionProducto = Convert.ToString(reader["descripcionProducto"].ToString());
+                            producto.precio = float.Parse(reader["precio"].ToString());
+                            producto.precioPromo = float.Parse(reader["precioPromo"].ToString());
+                            producto.stock = Convert.ToInt32(reader["stock"].ToString());
+                            producto.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
+                            producto.promocion = Convert.ToBoolean(reader["promocion"].ToString());
+
+                            listaProductos.Add(producto);
+                        }
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return listaProductos;
+        }
+
+        public async Task<List<Categoria>> obtenerCategorias()
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Categoria> listaCategorias = new List<Categoria>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT * FROM Categorias";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Categoria categoria = new Categoria();
+                            categoria.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
+                            categoria.nombreCategoria = Convert.ToString(reader["nombreCategoria"].ToString());
+                            
+
+                            listaCategorias.Add(categoria);
+                        }
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return listaCategorias;
+        }
+
+        public void insertarProducto(Producto producto)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Categoria> listaCategorias = new List<Categoria>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "INSERTAR_ARTICULO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //cmd.Parameters.AddWithValue("@IDPRODUCTO", producto.idProducto);
+                    cmd.Parameters.AddWithValue("@NOMBREPRODUCTO", producto.nombreProducto);
+                    cmd.Parameters.AddWithValue("@DESCRIPCION", producto.descripcionProducto);
+                    cmd.Parameters.AddWithValue("@PRECIO", producto.precio);
+                    cmd.Parameters.AddWithValue("@PRECIOPROMO", producto.precioPromo);
+                    cmd.Parameters.AddWithValue("@STOCK", producto.stock);
+                    cmd.Parameters.AddWithValue("@IDCATEGORIA", producto.idCategoria);
+                    cmd.Parameters.AddWithValue("@PROMOCION", producto.promocion);
+
+                    conn.OpenAsync();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Error al registrar los datos en la tabla Productos. " + sqlEx.Message);
+                    }
+                    catch (Exception otherEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Se produjo un error al ejecutar el método INSERTAR_ARTICULO." + otherEx.Message);
+                    }
+                    conn.CloseAsync();
+                }
+            }
         }
 
     }

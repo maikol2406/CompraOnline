@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CompraOnline.Models
+namespace CompraOnline.Models.Pedidos
 {
     public class ListaPedidos
     {

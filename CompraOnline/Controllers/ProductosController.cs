@@ -1,22 +1,62 @@
 ﻿using CompraOnline.Data;
-using CompraOnline.Models;
+using CompraOnline.Models.Pedidos;
+using CompraOnline.Models.Productos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CompraOnline.Controllers
 {
     public class ProductosController : Controller
     {
+        BaseDatos db = new BaseDatos();
+
         // GET: ProductosController
         [HttpGet]
-        [Route("/productosXCategoria")]
-        public async Task<ActionResult> ProductosXCategoria()
+        [Route("Productos/pedidos")]
+        public async Task<ActionResult> Pedidos()
         {
-            BaseDatos db = new BaseDatos();
             List<Pedido> listaPedidos = new List<Pedido>();
             int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
-            listaPedidos = db.obtenerPedidos(idUsuario);
+            listaPedidos = await db.obtenerPedidos(idUsuario);
+            return View(listaPedidos);
+        }
+
+        // GET: ProductosController
+        [HttpGet]
+        [Route("Productos/productosXCategoria")]
+        public async Task<ActionResult> ProductosXCategoria()
+        {
+            List<Producto> listaProductos = new List<Producto>();
+            int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
+            listaProductos = await db.obtenerProductos();
+            List<Categoria> listaCategorias = await db.obtenerCategorias();
+            ViewBag.listaCategorias = listaCategorias;
+            return View(listaProductos);
+        }
+
+        // GET: ProductosController/Create
+        //[Route("Productos/crearProducto")]
+        public async Task<ActionResult> CrearProducto()
+        {
+            ViewBag.Categorias = new SelectList(await db.obtenerCategorias(), "idCategoria", "nombreCategoria");
             return View();
+        }
+
+        // POST: ProductosController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CrearProducto(Producto producto)
+        {
+            try
+            {
+                db.insertarProducto(producto);
+                return RedirectToAction(nameof(ProductosXCategoria));
+            }
+            catch
+            {
+                return View(producto);
+            }
         }
 
         // GET: ProductosController
