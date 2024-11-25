@@ -96,9 +96,10 @@
                                 @Html.DisplayFor(modelItem => producto.promocion)
                             </td>
                             <td>
-                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                                @Html.ActionLink("Editar", "EditarProducto", new { idProducto = producto.idProducto }) |
+                                @Html.ActionLink("Detalles", "DetallesProducto", new { idProducto = producto.idProducto }) |
+                                @* @Html.ActionLink("Eliminar", "EliminarProducto", new { idProducto = producto.idProducto }) *@
+                                @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = producto.idProducto })
                             </td>
                         </tr>
                     }

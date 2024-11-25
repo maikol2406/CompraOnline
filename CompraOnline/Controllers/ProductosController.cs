@@ -50,11 +50,52 @@ namespace CompraOnline.Controllers
         {
             try
             {
+                if (producto.precio != producto.precioPromo)
+                {
+                    producto.promocion = true;
+                }
+                else
+                {
+                    producto.promocion = false;
+                }
                 db.insertarProducto(producto);
                 return RedirectToAction(nameof(ProductosXCategoria));
             }
             catch
             {
+                return View(producto);
+            }
+        }
+
+        // GET: ProductosController/Edit/5
+        public async Task<ActionResult> EditarProducto(int idProducto)
+        {
+            Producto producto = await db.obtenerProducto(idProducto);
+            ViewBag.Categorias = new SelectList(await db.obtenerCategorias(), "idCategoria", "nombreCategoria");
+            return View(producto);
+        }
+
+        // POST: ProductosController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditarProducto(Producto producto)
+        {
+            try
+            {
+                if (producto.precio != producto.precioPromo)
+                {
+                    producto.promocion = true;
+                }
+                else
+                {
+                    producto.promocion = false;
+                }
+                db.actualizarProducto(producto);
+                return RedirectToAction(nameof(ProductosXCategoria));
+            }
+            catch
+            {
+                ViewBag.Categorias = new SelectList(await db.obtenerCategorias(), "idCategoria", "nombreCategoria");
                 return View(producto);
             }
         }

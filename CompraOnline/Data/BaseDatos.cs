@@ -1,4 +1,5 @@
-﻿using CompraOnline.Models.Pedidos;
+﻿using CompraOnline.Models.CarritoCompras;
+using CompraOnline.Models.Pedidos;
 using CompraOnline.Models.Productos;
 using CompraOnline.Models.Usuarios;
 using Microsoft.Data.SqlClient;
@@ -196,37 +197,6 @@ namespace CompraOnline.Data
             return null;
         }
 
-        public async Task<List<Pedido>> obtenerPedidos(int idUsuario)
-        {
-            SqlConnectionStringBuilder builder = conexion();
-            List<Pedido> listaPedidos = new List<Pedido>();
-            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
-            {
-                string query = "SELECT * FROM Pedidos WHERE idUsuario = @IDUSUARIO";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
-                {
-                    cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
-                    await conn.OpenAsync();
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Pedido pedido = new Pedido();
-                            pedido.idPedido = Convert.ToInt32(reader["idPedido"].ToString());
-                            pedido.idUsuario = Convert.ToInt32(reader["idUsuario"].ToString());
-                            pedido.cantidad = Convert.ToInt32(reader["cantidad"].ToString());
-                            pedido.precioTotal = float.Parse(reader["precioTotal"].ToString());
-                            pedido.estadoPedido = Convert.ToBoolean(reader["estadoPedido"].ToString());
-
-                            listaPedidos.Add(pedido);
-                        }
-                    }
-                    await conn.CloseAsync();
-                }
-            }
-            return listaPedidos;
-        }
-
         public async Task<List<Producto>> obtenerProductos()
         {
             SqlConnectionStringBuilder builder = conexion();
@@ -258,6 +228,37 @@ namespace CompraOnline.Data
                 }
             }
             return listaProductos;
+        }
+
+        public async Task<Producto> obtenerProducto(int idProducto)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            Producto producto = new Producto();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT * FROM Productos WHERE idProducto = @IDPRODUCTO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IDPRODUCTO", idProducto);
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            producto.idProducto = Convert.ToInt32(reader["idProducto"].ToString());
+                            producto.nombreProducto = Convert.ToString(reader["nombreProducto"].ToString());
+                            producto.descripcionProducto = Convert.ToString(reader["descripcionProducto"].ToString());
+                            producto.precio = float.Parse(reader["precio"].ToString());
+                            producto.precioPromo = float.Parse(reader["precioPromo"].ToString());
+                            producto.stock = Convert.ToInt32(reader["stock"].ToString());
+                            producto.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
+                            producto.promocion = Convert.ToBoolean(reader["promocion"].ToString());
+                        }
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return producto;
         }
 
         public async Task<List<Categoria>> obtenerCategorias()
@@ -327,6 +328,222 @@ namespace CompraOnline.Data
                     conn.CloseAsync();
                 }
             }
+        }
+
+        public void actualizarProducto(Producto producto)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Categoria> listaCategorias = new List<Categoria>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "UPDATE Productos SET nombreProducto = @NOMBREPRODUCTO, descripcionProducto = @DESCRIPCION, precio = @PRECIO, " +
+                    "precioPromo = @PRECIOPROMO, stock = @STOCK, idCategoria = @IDCATEGORIA, promocion = @PROMOCION WHERE idProducto = @IDPRODUCTO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    //cmd.CommandType = CommandType.StoredProcedure;
+
+                    //cmd.Parameters.AddWithValue("@IDPRODUCTO", producto.idProducto);
+                    cmd.Parameters.AddWithValue("@NOMBREPRODUCTO", producto.nombreProducto);
+                    cmd.Parameters.AddWithValue("@DESCRIPCION", producto.descripcionProducto);
+                    cmd.Parameters.AddWithValue("@PRECIO", producto.precio);
+                    cmd.Parameters.AddWithValue("@PRECIOPROMO", producto.precioPromo);
+                    cmd.Parameters.AddWithValue("@STOCK", producto.stock);
+                    cmd.Parameters.AddWithValue("@IDCATEGORIA", producto.idCategoria);
+                    cmd.Parameters.AddWithValue("@PROMOCION", producto.promocion);
+                    cmd.Parameters.AddWithValue("@IDPRODUCTO", producto.idProducto);
+
+                    conn.OpenAsync();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Error al actualizar los datos en la tabla Productos. " + sqlEx.Message);
+                    }
+                    catch (Exception otherEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Se produjo un error al ejecutar el método UPDATE Productos." + otherEx.Message);
+                    }
+                    conn.CloseAsync();
+                }
+            }
+        }
+
+        public async Task<List<Pedido>> obtenerPedidos(int idUsuario)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Pedido> listaPedidos = new List<Pedido>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT * FROM Pedidos WHERE idUsuario = @IDUSUARIO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Pedido pedido = new Pedido();
+                            pedido.idPedido = Convert.ToInt32(reader["idPedido"].ToString());
+                            pedido.idUsuario = Convert.ToInt32(reader["idUsuario"].ToString());
+                            //pedido.cantidad = Convert.ToInt32(reader["cantidad"].ToString());
+                            pedido.precioTotal = float.Parse(reader["precioTotal"].ToString());
+                            pedido.estadoPedido = Convert.ToBoolean(reader["estadoPedido"].ToString());
+
+                            listaPedidos.Add(pedido);
+                        }
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return listaPedidos;
+        }
+
+        public async Task<Pedido> obtenerPedido(int idUsuario)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            Pedido pedido = new Pedido();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT TOP 1 * FROM Pedidos WHERE idUsuario = @IDUSUARIO ORDER BY idPedido DESC";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            pedido = new Pedido();
+                            pedido.idPedido = Convert.ToInt32(reader["idPedido"].ToString());
+                            pedido.idUsuario = Convert.ToInt32(reader["idUsuario"].ToString());
+                            //pedido.cantidad = Convert.ToInt32(reader["cantidad"].ToString());
+                            pedido.precioTotal = float.Parse(reader["precioTotal"].ToString());
+                            pedido.estadoPedido = Convert.ToBoolean(reader["estadoPedido"].ToString());
+                        }
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return pedido;
+        }
+
+        public async Task<int> insertarPedido(int idUsuario, float precioTotal, bool estadoPedido)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Categoria> listaCategorias = new List<Categoria>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "INSERTAR_PEDIDO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
+                    cmd.Parameters.AddWithValue("@PRECIOTOTAL", precioTotal);
+                    cmd.Parameters.AddWithValue("@ESTADOPEDIDO", estadoPedido);
+
+                    conn.OpenAsync();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Error al registrar los datos en la tabla Pedidos. " + sqlEx.Message);
+                    }
+                    catch (Exception otherEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Se produjo un error al ejecutar el método INSERTAR_PEDIDO." + otherEx.Message);
+                    }
+                    conn.CloseAsync();
+                }
+            }
+            return 1;
+        }
+
+        public async Task<int> actualizarCostoPedido(int idPedido, float precioTotal)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Categoria> listaCategorias = new List<Categoria>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "UPDATE Pedidos SET precioTotal = @PRECIOTOTAL WHERE idPedido = @IDPEDIDO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    //cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IDPEDIDO", idPedido);
+                    cmd.Parameters.AddWithValue("@PRECIOTOTAL", precioTotal);
+
+
+                    conn.OpenAsync();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Error al actualizar los datos en la tabla Pedidos. " + sqlEx.Message);
+                    }
+                    catch (Exception otherEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Se produjo un error al ejecutar el método UPDATE Pedido." + otherEx.Message);
+                    }
+                    conn.CloseAsync();
+                }
+            }
+            return 1;
+        }
+
+        public async Task<int> insertarCarritoCompras(CarritoCompra carrito)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Categoria> listaCategorias = new List<Categoria>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "INSERTAR_CARRITOCOMPRAS";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    //cmd.Parameters.AddWithValue("@IDPRODUCTO", producto.idProducto);
+                    cmd.Parameters.AddWithValue("@IDUSUARIO", carrito.idUsuario);
+                    cmd.Parameters.AddWithValue("@IDPEDIDO", carrito.idPedido);
+                    cmd.Parameters.AddWithValue("@IDPRODUCTO", carrito.idProducto);
+                    cmd.Parameters.AddWithValue("@CANTIDAD", carrito.cantidad);
+
+                    conn.OpenAsync();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Error al registrar los datos en la tabla CarritoCompras. " + sqlEx.Message);
+                    }
+                    catch (Exception otherEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Se produjo un error al ejecutar el método INSERTAR_CARRITOCOMPRAS." + otherEx.Message);
+                    }
+                    conn.CloseAsync();
+                }
+            }
+            return 1;
         }
 
     }

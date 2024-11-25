@@ -8,59 +8,59 @@
 
 <h4>Producto</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<section class="row">
+    <section class="col-md-4">
         <form asp-action="CrearProducto">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @* <div class="form-group">
+            <section asp-validation-summary="ModelOnly" class="text-danger"></section>
+            @* <section class="form-group">
                 <label asp-for="idProducto" class="control-label"></label>
                 <input asp-for="idProducto" class="form-control" />
                 <span asp-validation-for="idProducto" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
+            </section> *@
+            <section class="form-group">
                 <label asp-for="nombreProducto" class="control-label"></label>
                 <input asp-for="nombreProducto" class="form-control" />
                 <span asp-validation-for="nombreProducto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            </section>
+            <section class="form-group">
                 <label asp-for="descripcionProducto" class="control-label"></label>
                 <input asp-for="descripcionProducto" class="form-control" />
                 <span asp-validation-for="descripcionProducto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            </section>
+            <section class="form-group">
                 <label asp-for="precio" class="control-label"></label>
                 <input asp-for="precio" class="form-control" />
                 <span asp-validation-for="precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            </section>
+            <section class="form-group">
                 <label asp-for="precioPromo" class="control-label"></label>
                 <input asp-for="precioPromo" class="form-control" />
                 <span asp-validation-for="precioPromo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            </section>
+            <section class="form-group">
                 <label asp-for="stock" class="control-label"></label>
                 <input asp-for="stock" class="form-control" />
                 <span asp-validation-for="stock" class="text-danger"></span>
-            </div>
-            @* <div class="form-group">
+            </section>
+            @* <section class="form-group">
                 <label asp-for="idCategoria" class="control-label"></label>
                 <input asp-for="idCategoria" class="form-control" />
                 <span asp-validation-for="idCategoria" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
+            </section> *@
+            <section class="form-group">
                 <label asp-for="idCategoria" class="control-label"></label>
                 <select asp-for="idCategoria" class="form-control" asp-items="ViewBag.Categorias">
                     <option value="">Seleccione una categoría</option>
                 </select>
                 <span asp-validation-for="idCategoria" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
+            </section>
+            <section class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="promocion" /> @Html.DisplayNameFor(model => model.promocion)
                 </label>
-            </div>
+            </section>
 
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger">
+            <section asp-validation-summary="ModelOnly" class="alert alert-danger">
                 <strong>Errores:</strong>
                 <ul>
                     @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
@@ -68,18 +68,18 @@
                         <li>@error.ErrorMessage</li>
                     }
                 </ul>
-            </div>
+            </section>
 
-            <div class="form-group">
+            <section class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+            </section>
         </form>
-    </div>
-</div>
+    </section>
+</section>
 
-<div>
+<section>
     <a asp-action="Index">Back to List</a>
-</div>
+</section>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
