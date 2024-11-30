@@ -2,6 +2,7 @@
 using CompraOnline.Models.CarritoCompras;
 using CompraOnline.Models.Pedidos;
 using CompraOnline.Models.Productos;
+using CompraOnline.Models.Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,27 @@ namespace CompraOnline.Controllers
     public class CarritoComprasController : Controller
     {
         BaseDatos db = new BaseDatos();
+
+        // GET: CarritoComprasController
+        public async Task<ActionResult> VerCarrito()
+        {
+            int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
+            Pedido pedido = await db.obtenerPedido(idUsuario);
+            List<CarritoCompra> listaCarrito = new List<CarritoCompra>();
+            foreach (var item in await db.obtenerCarritoCompras(pedido.idPedido))
+            {
+                listaCarrito.Add(item);
+            }
+            if (pedido.idPedido == 0)
+            {
+                await db.insertarPedido(idUsuario, 0, false);
+            }
+            List<Producto> listaProductos = await db.obtenerProductos();
+            List<Usuario> listaUsuarios = await db.obtenerUsuarios();
+            ViewBag.listaProductos = listaProductos;
+            ViewBag.listaUsuarios = listaUsuarios;
+            return View(listaCarrito);
+        }
 
         // GET: CarritoComprasController/Create
         public async Task<ActionResult> ProductoCarrito(int idProducto)
@@ -49,7 +71,11 @@ namespace CompraOnline.Controllers
                     if (item.idPedido == carrito.idPedido)
                     {
                         //CREAR UN METODO EN BASE DE DATOS PARA TRAER EL CARRITO Y LEER EL COSTO DE CADA ARTICULO CON EL ID DE PEDIDO Y PASARLO A PRECIOTOTAL.
-                        precioTotal = item.precioTotal + precioTotal;
+                        foreach (var item2 in await db.obtenerCarritoCompras(item.idPedido))
+                        {
+                            precioTotal = precioTotal + item2.montoTotal;
+                        }
+                        //precioTotal = item.precioTotal + precioTotal;
                     }
                 }
                 int proceso2 = await db.actualizarCostoPedido(carrito.idPedido, precioTotal);

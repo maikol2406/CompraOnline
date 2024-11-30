@@ -4,6 +4,7 @@ using CompraOnline.Models.Productos;
 using CompraOnline.Models.Usuarios;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System.Configuration;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -410,7 +411,7 @@ namespace CompraOnline.Data
             Pedido pedido = new Pedido();
             using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
             {
-                string query = "SELECT TOP 1 * FROM Pedidos WHERE idUsuario = @IDUSUARIO ORDER BY idPedido DESC";
+                string query = "SELECT TOP 1 * FROM Pedidos WHERE idUsuario = @IDUSUARIO AND estadoPedido = 0 ORDER BY idPedido DESC";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
@@ -544,6 +545,164 @@ namespace CompraOnline.Data
                 }
             }
             return 1;
+        }
+
+        public async Task<List<CarritoCompra>> obtenerCarritoCompras(int idPedido)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            CarritoCompra carritoCompra = new CarritoCompra();
+            List<CarritoCompra> listaCarritos = new List<CarritoCompra>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT idCarrito, idUsuario, idPedido, idProducto, cantidad, montoTotal FROM CarritoCompras WHERE idPedido = @IDPEDIDO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    //cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@IDPEDIDO", idPedido);
+
+                    await conn.OpenAsync();
+                    try
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                carritoCompra = new CarritoCompra();
+                                carritoCompra.idCarrito = Convert.ToInt32(reader["idCarrito"].ToString());
+                                carritoCompra.idUsuario = Convert.ToInt32(reader["idUsuario"].ToString());
+                                carritoCompra.idPedido = Convert.ToInt32(reader["idPedido"].ToString());
+                                carritoCompra.idProducto = Convert.ToInt32(reader["idProducto"].ToString());
+                                carritoCompra.cantidad = Convert.ToInt32(reader["cantidad"].ToString());
+                                carritoCompra.montoTotal = float.Parse(reader["montoTotal"].ToString());
+
+                                listaCarritos.Add(carritoCompra);
+                            }
+                        }
+                        await conn.CloseAsync();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Error al obtener los datos de la tabla CarritoCompras. " + sqlEx.Message);
+                    }
+                }
+            }
+            return listaCarritos;
+        }
+
+        public async Task<List<Pago>> ObtenerPagos(int idCliente)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Pago> listaPagos = new List<Pago>();
+            Pago pago;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(builder.ToString()))
+                {
+                    string query = "SELECT * FROM Pagos WHERE idCliente = @IDCLIENTE";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDCLIENTE", idCliente);
+                        await conn.OpenAsync();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                pago = new Pago();
+                                pago.pk_tsal001 = reader["pk_tsal001"] as string ?? "";
+                                pago.idPedido = reader["idPedido"] as int? ?? 0;
+                                pago.terminalId = reader["terminalId"] as string ?? "";
+                                pago.transactionType = reader["transactionType"] as string ?? "";
+                                pago.invoice = reader["invoice"] as string ?? "";
+                                pago.totalAmount = reader["totalAmount"] as string ?? "";
+                                pago.taxAmount = reader["taxAmount"] as string ?? "";
+                                pago.tipAmount = reader["tipAmount"] as string ?? "";
+                                pago.clientEmail = reader["clientEmail"] as string ?? "";
+                                pago.idCliente = reader["idCliente"] as int? ?? 0;
+
+                                listaPagos.Add(pago);
+                            }
+                        }
+                    }
+                }
+                return listaPagos;
+            }
+            catch (Exception e)
+            {
+                return listaPagos = new List<Pago>();
+                throw new Exception("Error cargando los pagos" + e.Message);
+            }
+        }
+
+        public async Task<int> insertarPago(Pago pago)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Categoria> listaCategorias = new List<Categoria>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "INSERTAR_PAGO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.AddWithValue("@PK_TSAL001", pago.pk_tsal001);
+                    cmd.Parameters.AddWithValue("@IDPEDIDO", pago.idPedido);
+                    cmd.Parameters.AddWithValue("@TERMINALID", pago.terminalId);
+                    cmd.Parameters.AddWithValue("@TRANSACTIONTYPE", pago.transactionType);
+                    cmd.Parameters.AddWithValue("@INVOICE", pago.invoice);
+                    cmd.Parameters.AddWithValue("@TOTALAMOUNT", pago.totalAmount);
+                    cmd.Parameters.AddWithValue("@TAXAMOUNT", pago.taxAmount);
+                    cmd.Parameters.AddWithValue("@TIPAMOUNT", pago.tipAmount);
+                    cmd.Parameters.AddWithValue("@CLIENTEMAIL", pago.clientEmail);
+                    cmd.Parameters.AddWithValue("@IDCLIENTE", pago.idCliente);
+
+                    await conn.OpenAsync();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                    catch (SqlException sqlEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Error al registrar los datos en la tabla de Pagos. " + sqlEx.Message);
+                    }
+                    catch (Exception otherEx)
+                    {
+                        conn.Close();
+                        throw new Exception("Se produjo un error al ejecutar el método INSERTAR_PAGO." + otherEx.Message);
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return 1;
+        }
+
+        public async Task actualizarPedido(int idPedido)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                try
+                {
+                    await conn.OpenAsync();
+                    var query = "UPDATE Pedidos SET estadoPedido = @ESTADO WHERE idPedido = @IDPEDIDO;";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@ESTADO", 1);
+                        cmd.Parameters.AddWithValue("@IDPEDIDO", idPedido);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    throw new Exception("Error al actualizar el estado del pedido. " + e.Message);
+                }
+            }
         }
 
     }
