@@ -25,5 +25,6 @@ namespace CompraOnline.Models.Productos
         public int idCategoria { get; set; }
         [Display(Name = "Promoción")]
         public bool promocion { get; set; }
+        public string? imagen { get; set; }
     }
 }

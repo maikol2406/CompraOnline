@@ -3,9 +3,14 @@
 @{
     ViewData["Title"] = "Detalles del Pedido";
     List<CompraOnline.Models.Usuarios.Usuario> usuarios = ViewBag.listaUsuarios;
+    string imagenPedido = "https://paqueteriaestrellablanca.com/wp-content/uploads/2022/01/tipos-cajas-carton-y-usos.png";
 }
 
 <h1 class="text-center mb-4">Detalles del Pedido</h1>
+
+<section class="text-center mb-4">
+    <img src="@imagenPedido" alt="ImagenCajasEnvio" class="img-fluid rounded" style="max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 10px;">
+</section>
 
 <div class="container">
     <div class="row justify-content-center">
@@ -53,11 +58,13 @@
             </div>
         </div>
     </div>
+
     <div class="row justify-content-center mt-3">
-        <div class="col-12">
+        <div class="col-12 text-center">
             <a asp-action="MisPedidos" class="btn btn-danger">
                 <i class="bi bi-arrow-left-circle"></i> Regresar a la lista de pedidos
             </a>
         </div>
     </div>
 </div>
+

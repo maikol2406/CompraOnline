@@ -221,6 +221,7 @@ namespace CompraOnline.Data
                             producto.stock = Convert.ToInt32(reader["stock"].ToString());
                             producto.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
                             producto.promocion = Convert.ToBoolean(reader["promocion"].ToString());
+                            producto.imagen = Convert.ToString(reader["imagen"].ToString());
 
                             listaProductos.Add(producto);
                         }
@@ -283,6 +284,7 @@ namespace CompraOnline.Data
                             producto.stock = Convert.ToInt32(reader["stock"].ToString());
                             producto.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
                             producto.promocion = Convert.ToBoolean(reader["promocion"].ToString());
+                            producto.imagen = Convert.ToString(reader["imagen"].ToString());
 
                             listaProductos.Add(producto);
 
@@ -317,6 +319,7 @@ namespace CompraOnline.Data
                             producto.stock = Convert.ToInt32(reader["stock"].ToString());
                             producto.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
                             producto.promocion = Convert.ToBoolean(reader["promocion"].ToString());
+                            producto.imagen = Convert.ToString(reader["imagen"].ToString());
                         }
                     }
                     await conn.CloseAsync();
@@ -348,6 +351,7 @@ namespace CompraOnline.Data
                             producto.stock = Convert.ToInt32(reader["stock"].ToString());
                             producto.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
                             producto.promocion = Convert.ToBoolean(reader["promocion"].ToString());
+                            producto.imagen = Convert.ToString(reader["imagen"].ToString());
 
                             listaProductos.Add(producto);
                         }

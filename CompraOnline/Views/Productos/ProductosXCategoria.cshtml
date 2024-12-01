@@ -31,6 +31,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>@Html.DisplayNameFor(model => model.imagen)</th>
                                 <th>@Html.DisplayNameFor(model => model.nombreProducto)</th>
                                 <th>@Html.DisplayNameFor(model => model.descripcionProducto)</th>
                                 <th>@Html.DisplayNameFor(model => model.precio)</th>
@@ -43,6 +44,9 @@
                             @foreach (var producto in productoAgrupado)
                             {
                                 <tr>
+                                    <td>
+                                        <img src="@producto.imagen" alt="@producto.nombreProducto" class="img-fluid" style="max-width: 50px; max-height: 50px; object-fit: cover;">
+                                    </td>
                                     <td>@Html.DisplayFor(modelItem => producto.nombreProducto)</td>
                                     <td>@Html.DisplayFor(modelItem => producto.descripcionProducto)</td>
                                     <td>@Html.DisplayFor(modelItem => producto.precio)</td>

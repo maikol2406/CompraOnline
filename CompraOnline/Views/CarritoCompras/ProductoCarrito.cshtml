@@ -7,7 +7,7 @@
 
 <h1 class="text-center my-4">Producto Carrito</h1>
 
-<div class="container">
+<div class="container mb-5">
     <h4 class="text-secondary">Detalles del Carrito</h4>
     <hr />
     <div class="row justify-content-center">
@@ -19,6 +19,10 @@
                 <input asp-for="idUsuario" class="form-control d-none" />
                 <input asp-for="idPedido" class="form-control d-none" />
                 <input asp-for="idProducto" class="form-control d-none" />
+
+                <section class="text-center mb-4">
+                    <img src="@ViewBag.imagen" alt="@ViewBag.producto" class="img-fluid rounded" style="max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 10px;">
+                </section>
 
                 <div class="form-group mb-3">
                     <label class="form-label">Nombre del producto</label>

@@ -31,7 +31,7 @@
                                     <div class="card-header text-center bg-primary text-white">
                                         <strong>@Model[i].nombreProducto</strong>
                                     </div>
-                                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="@Model[i].nombreProducto" />
+                                    <img src="@Model[i].imagen" class="card-img-top img-fluid" alt="@Model[i].nombreProducto" style="height: 200px; object-fit: cover;">
                                     <div class="card-body text-center">
                                         <p class="card-text">@Model[i].descripcionProducto</p>
                                         <p class="card-text">
@@ -47,7 +47,8 @@
                                             }
                                         </p>
                                         <p class="text-muted">Stock disponible: @Model[i].stock</p>
-                                        <a href="/Productos/Detalle/@Model[i].idProducto" class="btn btn-success btn-sm">Ver más</a>
+                                        @* <a href="/Productos/DetallesProducto/@Model[i].idProducto" class="btn btn-success btn-sm">Ver más</a> *@
+                                        <a href="@Url.Action("DetallesProducto", "Productos", new { idProducto = Model[i].idProducto })" class="btn btn-success btn-sm">Ver detalles</a>
                                     </div>
                                 </div>
                             </div>

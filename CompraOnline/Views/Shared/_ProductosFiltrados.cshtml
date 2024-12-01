@@ -5,7 +5,7 @@
     int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
 }
 
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
     <h1 class="text-center mb-4">Productos Filtrados</h1>
 
     <div class="row">
@@ -14,6 +14,7 @@
             <div class="col-md-4 mb-3">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <img src="@item.imagen" alt="@item.nombreProducto" class="card-img-top img-fluid" style="max-height: 200px; object-fit: contain;">
                         <h5 class="card-title">@item.nombreProducto</h5>
                         <p class="card-text">@item.descripcionProducto</p>
                         <p><strong>Precio:</strong> $@item.precio</p>

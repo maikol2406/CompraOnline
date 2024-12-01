@@ -30,6 +30,7 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>Imagen</th>
                 <th>Nombre del cliente</th>
                 <th>Producto</th>
                 <th>Cantidad</th>
@@ -41,6 +42,16 @@
             @foreach (var item in Model)
             {
                 <tr>
+                    <td>
+                        @foreach (var item2 in productos)
+                        {
+                            if (item.idProducto == item2.idProducto)
+                            {
+                                <img src="@item2.imagen" alt="@item2.nombreProducto" class="img-fluid" style="max-width: 50px; max-height: 50px; object-fit: cover;">
+                            }
+                        }
+                       
+                    </td>
                     <td>
                         @foreach (var item2 in usuarios)
                         {

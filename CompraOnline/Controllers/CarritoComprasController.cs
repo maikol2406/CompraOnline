@@ -67,6 +67,7 @@ namespace CompraOnline.Controllers
             Producto producto = await db.obtenerProducto(carrito.idProducto);
             ViewBag.producto = producto.nombreProducto + " - " + producto.descripcionProducto;
             ViewBag.productoPrecio = producto.precio;
+            ViewBag.imagen = producto.imagen;
             return View(carrito);
         }
 
@@ -120,7 +121,16 @@ namespace CompraOnline.Controllers
         public async Task<ActionResult> EditarProductoCarrito(int idCarrito)
         {
             CarritoCompra productoCarrito = new CarritoCompra();
+            List<Producto> listaProductos = await db.obtenerProductos();
             productoCarrito = await db.obtenerProductoCarrito(idCarrito);
+            foreach (var item in listaProductos)
+            {
+                if (productoCarrito.idProducto == item.idProducto)
+                {
+                    ViewBag.producto = item;
+                    break;
+                }
+            }
             return View(productoCarrito);
         }
 
