@@ -4,6 +4,7 @@
     ViewData["Title"] = "VerCarrito";
     List<CompraOnline.Models.Productos.Producto> productos = ViewBag.listaProductos;
     List<CompraOnline.Models.Usuarios.Usuario> usuarios = ViewBag.listaUsuarios;
+    float totalCarrito = ViewBag.totalCarrito;
 }
 
 <h1>VerCarrito</h1>
@@ -14,27 +15,37 @@
     @* <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.Any() ? Model.First().idPedido : 0 })" class="btn btn-primary">Pagar pedido</a> *@
     @if (Model.Any())
     {
-        <p>
-            <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">Pagar pedido</a>
-        </p>
+        <section>
+            <section>
+                <p>
+                    <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">Pagar pedido</a>
+                    <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">Agregar productos</a>
+                </p>
+            </section>
+            <section>
+                <p>Monto total: @totalCarrito</p>
+            </section>
+        </section>
+
+        <hr />
         <table class="table">
             <thead>
                 <tr>
-                    <th>
+                    @* <th>
                         @Html.DisplayNameFor(model => model.idCarrito)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.idUsuario)
-                    </th>
+                    </th> *@
                     <th>
                         Nombre del cliente
                     </th>
-                    <th>
+                    @* <th>
                         @Html.DisplayNameFor(model => model.idPedido)
                     </th>
                     <th>
                         @Html.DisplayNameFor(model => model.idProducto)
-                    </th>
+                    </th> *@
                     <th>
                         Producto
                     </th>
@@ -44,19 +55,19 @@
                     <th>
                         @Html.DisplayNameFor(model => model.montoTotal)
                     </th>
-                    @* <th></th> *@
+                    <th>Opciones</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>
+                        @* <td>
                             @Html.DisplayFor(modelItem => item.idCarrito)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.idUsuario)
-                        </td>
+                        </td> *@
                         <td>
                             @foreach (var item2 in usuarios)
                             {
@@ -66,12 +77,12 @@
                                 }
                             }
                         </td>
-                        <td>
+                        @* <td>
                             @Html.DisplayFor(modelItem => item.idPedido)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.idProducto)
-                        </td>
+                        </td> *@
                         <td>
                             @foreach (var item2 in productos)
                             {
@@ -88,11 +99,11 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.montoTotal)
                         </td>
-                        @* <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td> *@
+                        <td>
+                            @Html.ActionLink("Editar", "EditarProductoCarrito", new { idCarrito = item.idCarrito }) |
+                            @* @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) | *@
+                            @Html.ActionLink("Eliminar", "EliminarProductoCarrito", new { idCarrito = item.idCarrito })
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -101,7 +112,12 @@
     else
     {
         <br />
-        <h1 class="text-center">No tienes artículos en el carrito.</h1>
+        <section>
+            <h1 class="text-center">No tienes artículos en el carrito.</h1>
+        </section>
+       <section>
+            <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">Agregar productos</a>
+       </section>
     }
 
 

@@ -4,9 +4,9 @@ namespace CompraOnline.Models.Usuarios
 {
     public class Usuario
     {
-        [Required]
+        [Required(ErrorMessage = "El nombre de usuario es obligatorio.")]
         public int idUsuario { get; set; }
-        [Required]
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
         [Display(Name = "Nombre de usuario")]
         public string username { get; set; }
         [Required]

@@ -11,6 +11,7 @@ namespace CompraOnline.Models.CarritoCompras
         [Display(Name = "Cantidad")]
         [Range(1,int.MaxValue, ErrorMessage =("La cantidad debe ser mayor que 1"))]
         public int cantidad { get; set; }
+        [Display(Name ="Monto total")]
         public float montoTotal { get; set; }
     }
 }

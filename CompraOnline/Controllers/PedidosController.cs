@@ -1,5 +1,6 @@
 ﻿using CompraOnline.Data;
 using CompraOnline.Models.Pedidos;
+using CompraOnline.Models.Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,8 +20,11 @@ namespace CompraOnline.Controllers
         public async Task<ActionResult> MisPedidos()
         {
             List<Pedido> listaPedidos = new List<Pedido>();
+            List<Usuario> listaUsuarios = await db.obtenerUsuarios();
             int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
             listaPedidos = await db.obtenerPedidos(idUsuario);
+            ViewBag.listaUsuarios = listaUsuarios;
+            ViewBag.fecha = DateTime.Now.AddMinutes(-120);
             return View(listaPedidos);
         }
 
@@ -29,18 +33,20 @@ namespace CompraOnline.Controllers
         {
             Pedido pedido = new Pedido();
             pedido.idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
-            return View();
+            pedido.precioTotal = 0;
+            pedido.estadoPedido = false;
+            return View(pedido);
         }
 
         // POST: PedidosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CrearPedidos(int idCliente)
+        public async Task<ActionResult> CrearPedidos(Pedido pedido)
         {
             try
             {
-
-                return RedirectToAction(nameof(Index));
+                await db.insertarPedido(pedido.idUsuario, pedido.precioTotal, pedido.estadoPedido);
+                return RedirectToAction(nameof(MisPedidos));
             }
             catch
             {
@@ -54,6 +60,11 @@ namespace CompraOnline.Controllers
             var factura = "0070000701";
             int idCliente = int.Parse(User.FindFirst("idUsuario")?.Value);
             var pedido = await db.obtenerPedido(idCliente);
+
+            foreach (var item in await db.obtenerCarritosCompras(pedido.idPedido))
+            {
+                pedido.precioTotal = pedido.precioTotal + item.montoTotal;
+            }
 
             Pago pago = new Pago();
             
@@ -179,6 +190,16 @@ namespace CompraOnline.Controllers
                                         pedido.estadoPedido = true;
                                         seguir = false;
                                         await db.actualizarPedido(pago.idPedido);
+                                        foreach (var item in await db.obtenerCantidades(pago.idPedido))
+                                        {
+                                            foreach (var item2 in await db.obtenerProductos())
+                                            {
+                                                if (item.idProducto == item2.idProducto)
+                                                {
+                                                    item2.stock = item2.stock - item.cantidad;
+                                                }
+                                            }
+                                        }
                                         return RedirectToAction("MisPedidos", "Pedidos");
                                     }
                                 }
@@ -194,79 +215,25 @@ namespace CompraOnline.Controllers
             }
         }
 
-        // GET: PedidosController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         // GET: PedidosController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> DetallesPedido(int idPedido)
         {
-            return View();
-        }
-
-        // GET: PedidosController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: PedidosController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PedidosController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PedidosController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Pedido pedido = new Pedido();
+            List<Usuario> listaUsuarios = await db.obtenerUsuarios();
+            int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
+            pedido = await db.obtenerPedidoXId(idPedido, idUsuario);
+            ViewBag.listaUsuarios = listaUsuarios;
+            return View(pedido);
         }
 
         // GET: PedidosController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> EliminarPedido(int idPedido)
         {
-            return View();
-        }
-
-        // POST: PedidosController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            Pedido pedido = new Pedido();
+            int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
+            pedido = await db.obtenerPedidoXId(idPedido, idUsuario);
+            int i = await db.eliminarPedido(pedido);
+            return RedirectToAction(nameof(MisPedidos));
         }
     }
 }

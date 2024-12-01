@@ -1,0 +1,58 @@
+﻿@model CompraOnline.Models.CarritoCompras.CarritoCompra
+
+@{
+    ViewData["Title"] = "EditarProductoCarrito";
+}
+
+<h1>EditarProductoCarrito</h1>
+
+<h4>CarritoCompra</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditarProductoCarrito">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="idCarrito" class="control-label" hidden></label>
+                <input asp-for="idCarrito" class="form-control" type="hidden"/>
+                <span asp-validation-for="idCarrito" class="text-danger" hidden></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="idUsuario" class="control-label" hidden></label>
+                <input asp-for="idUsuario" class="form-control" type="hidden"/>
+                <span asp-validation-for="idUsuario" class="text-danger" hidden></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="idPedido" class="control-label" hidden></label>
+                <input asp-for="idPedido" class="form-control" type="hidden"/>
+                <span asp-validation-for="idPedido" class="text-danger" hidden></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="idProducto" class="control-label" hidden></label>
+                <input asp-for="idProducto" class="form-control" type="hidden"/>
+                <span asp-validation-for="idProducto" class="text-danger" hidden></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="cantidad" class="control-label"></label>
+                <input asp-for="cantidad" class="form-control" />
+                <span asp-validation-for="cantidad" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="montoTotal" class="control-label" hidden></label>
+                <input asp-for="montoTotal" class="form-control" type="hidden"/>
+                <span asp-validation-for="montoTotal" class="text-danger" hidden></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Actualizar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

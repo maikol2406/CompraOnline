@@ -1,0 +1,70 @@
+﻿@model CompraOnline.Models.Productos.Producto
+
+@{
+    ViewData["Title"] = "DetallesProducto";
+    int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
+}
+
+<h1>DetallesProducto</h1>
+
+<div>
+    <h4>Producto</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idProducto)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idProducto)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.nombreProducto)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.nombreProducto)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.descripcionProducto)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.descripcionProducto)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.precio)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.precio)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.precioPromo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.precioPromo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.stock)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.stock)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.idCategoria)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.idCategoria)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.promocion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.promocion)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (idUsuario == 1)
+    {
+        @Html.ActionLink("Editar", "EditarProducto", new { idProducto = Model.idProducto }, new { @class = "btn btn-warning" })
+    }
+    <a asp-action="productosXCategoria" class="btn btn-danger">Regresar a la lista de productos</a>
+</div>

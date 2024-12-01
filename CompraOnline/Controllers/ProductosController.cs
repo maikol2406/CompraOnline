@@ -1,4 +1,5 @@
 ﻿using CompraOnline.Data;
+using CompraOnline.Models.CarritoCompras;
 using CompraOnline.Models.Pedidos;
 using CompraOnline.Models.Productos;
 using Microsoft.AspNetCore.Http;
@@ -20,6 +21,22 @@ namespace CompraOnline.Controllers
             int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
             listaPedidos = await db.obtenerPedidos(idUsuario);
             return View(listaPedidos);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> BuscarProducto()
+        {
+            List<Producto> listaProductos = new List<Producto>();
+            listaProductos = await db.obtenerNombresProductos();
+            ViewBag.nombreProductos = listaProductos.Select(o => new SelectListItem { Value = o.nombreProducto, Text = o.nombreProducto }).ToList();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ObtenerProductosFiltro(string nombreProducto)
+        {
+            var productos = await db.obtenerProductosFiltrados(nombreProducto);
+            return PartialView("_ProductosFiltrados", productos);
         }
 
         // GET: ProductosController
@@ -97,6 +114,22 @@ namespace CompraOnline.Controllers
             {
                 ViewBag.Categorias = new SelectList(await db.obtenerCategorias(), "idCategoria", "nombreCategoria");
                 return View(producto);
+            }
+        }
+
+        // GET: CarritoComprasController/Detail/5
+        public async Task<ActionResult> DetallesProducto(int idProducto)
+        {
+            try
+            {
+                Producto producto = new Producto();
+                producto = await db.obtenerProducto(idProducto);
+
+                return View(producto);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(ProductosXCategoria));
             }
         }
 

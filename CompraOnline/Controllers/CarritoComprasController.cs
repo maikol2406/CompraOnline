@@ -15,21 +15,31 @@ namespace CompraOnline.Controllers
         // GET: CarritoComprasController
         public async Task<ActionResult> VerCarrito()
         {
+            float totalCarrito = 0;
+            List<Producto> listaProductos = await db.obtenerProductos();
+            List<Usuario> listaUsuarios = await db.obtenerUsuarios();
             int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
             Pedido pedido = await db.obtenerPedido(idUsuario);
             List<CarritoCompra> listaCarrito = new List<CarritoCompra>();
-            foreach (var item in await db.obtenerCarritoCompras(pedido.idPedido))
+            foreach (var item in await db.obtenerCarritosCompras(pedido.idPedido))
             {
                 listaCarrito.Add(item);
+                foreach (var item2 in listaProductos)
+                {
+                    if (item.idProducto == item2.idProducto)
+                    {
+                        totalCarrito = totalCarrito + (item2.precioPromo * item.cantidad);
+                    }
+                }
             }
             if (pedido.idPedido == 0)
             {
                 await db.insertarPedido(idUsuario, 0, false);
             }
-            List<Producto> listaProductos = await db.obtenerProductos();
-            List<Usuario> listaUsuarios = await db.obtenerUsuarios();
+            
             ViewBag.listaProductos = listaProductos;
             ViewBag.listaUsuarios = listaUsuarios;
+            ViewBag.totalCarrito = totalCarrito;
             return View(listaCarrito);
         }
 
@@ -54,6 +64,9 @@ namespace CompraOnline.Controllers
             carrito.idUsuario = idUsuario;
             
             carrito.idProducto = idProducto;
+            Producto producto = await db.obtenerProducto(carrito.idProducto);
+            ViewBag.producto = producto.nombreProducto + " - " + producto.descripcionProducto;
+            ViewBag.productoPrecio = producto.precio;
             return View(carrito);
         }
 
@@ -64,6 +77,23 @@ namespace CompraOnline.Controllers
         {
             try
             {
+                foreach (var item in await db.obtenerProductos())
+                {
+                    if (item.idProducto == carrito.idProducto && carrito.cantidad > item.stock)
+                    {
+                        ModelState.AddModelError("cantidad", $"La cantidad solicitada ({carrito.cantidad}) excede el stock disponible ({item.stock}).");
+                        ViewBag.productoPrecio = item.precio;
+                        return View(carrito);
+                    }
+                    else
+                    {
+                        if (item.idProducto == carrito.idPedido)
+                        {
+                            ViewBag.stock = item.stock;
+                        }
+                    }
+                }
+                
                 float precioTotal = 0;
                 int proceso = await db.insertarCarritoCompras(carrito);
                 foreach (var item in await db.obtenerPedidos(carrito.idUsuario))
@@ -71,7 +101,7 @@ namespace CompraOnline.Controllers
                     if (item.idPedido == carrito.idPedido)
                     {
                         //CREAR UN METODO EN BASE DE DATOS PARA TRAER EL CARRITO Y LEER EL COSTO DE CADA ARTICULO CON EL ID DE PEDIDO Y PASARLO A PRECIOTOTAL.
-                        foreach (var item2 in await db.obtenerCarritoCompras(item.idPedido))
+                        foreach (var item2 in await db.obtenerCarritosCompras(item.idPedido))
                         {
                             precioTotal = precioTotal + item2.montoTotal;
                         }
@@ -79,7 +109,7 @@ namespace CompraOnline.Controllers
                     }
                 }
                 int proceso2 = await db.actualizarCostoPedido(carrito.idPedido, precioTotal);
-                return RedirectToAction("ProductosXCategoria", "Productos");
+                return RedirectToAction("VerCarrito", "CarritoCompras");
             }
             catch
             {
@@ -87,53 +117,22 @@ namespace CompraOnline.Controllers
             }
         }
 
-        // GET: CarritoComprasController
-        public ActionResult Index()
+        public async Task<ActionResult> EditarProductoCarrito(int idCarrito)
         {
-            return View();
-        }
-
-        // GET: CarritoComprasController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: CarritoComprasController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CarritoComprasController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CarritoComprasController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
+            CarritoCompra productoCarrito = new CarritoCompra();
+            productoCarrito = await db.obtenerProductoCarrito(idCarrito);
+            return View(productoCarrito);
         }
 
         // POST: CarritoComprasController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> EditarProductoCarrito(CarritoCompra carrito)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                await db.actualizarProductoCarrito(carrito);
+                return RedirectToAction(nameof(VerCarrito));
             }
             catch
             {
@@ -142,24 +141,12 @@ namespace CompraOnline.Controllers
         }
 
         // GET: CarritoComprasController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> EliminarProductoCarrito(int idCarrito)
         {
-            return View();
+            CarritoCompra carrito = await db.obtenerProductoCarrito(idCarrito);
+            int i = await db.eliminarProductoCarrito(carrito);
+            return RedirectToAction(nameof(VerCarrito));
         }
 
-        // POST: CarritoComprasController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
     }
 }

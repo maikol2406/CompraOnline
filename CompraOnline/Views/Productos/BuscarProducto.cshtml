@@ -1,0 +1,54 @@
+﻿@model IEnumerable<CompraOnline.Models.Productos.Producto>
+
+@{
+    ViewData["Title"] = "BuscarProducto";
+}
+
+<h1>Buscar Productos</h1>
+
+<form id="buscarProductos" method="post" asp-action="ObtenerProductosFiltro">
+    @Html.AntiForgeryToken()
+    <section class="form-group">
+        <label for="nombreProducto">Seleccione el nombre del producto:</label>
+        <select name="nombreProducto" class="form-control" id="productosDropdown">
+            <option value="">Seleccione un nombre de producto</option>
+            @foreach (SelectListItem producto in ViewBag.nombreProductos)
+            {
+                <option value="@producto.Value">@producto.Text</option>
+            }
+        </select>
+    </section>
+    <button type="submit" class="btn btn-primary m-2">Buscar</button>
+</form>
+
+<section id="resultadosBusqueda">
+
+</section>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#buscarProductos').on('submit', function (event) {
+                event.preventDefault();
+                var nombreProducto = $('#productosDropdown').val();
+
+                if (nombreProducto) {
+                    $.ajax({
+                        url: '@Url.Action("ObtenerProductosFiltro", "Productos")',
+                        type: 'POST',
+                        data: { nombreProducto: nombreProducto },
+                        success: function (data) {
+                            $('#resultadosBusqueda').html(data);
+                        },
+                        error: function () {
+                            alert("Error al obtener los productos. Intente nuevamente.");
+                        }
+                    });
+                } else {
+                    alert("Por favor, seleccione un nombre de producto.");
+                }
+            });
+        });
+    </script>
+    }

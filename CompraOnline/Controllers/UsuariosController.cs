@@ -32,6 +32,8 @@ namespace CompraOnline.Controllers
 
                 if (!ModelState.IsValid)
                 {
+                    ModelState.AddModelError(string.Empty, $"El usuario o la contraseña ingresada no son validos.");
+                    TempData["ErrorMessage"] = "Los datos ingresados no son válidos.";
                     return View(login);
                 }
 
@@ -43,7 +45,8 @@ namespace CompraOnline.Controllers
 
                 if (!isValidUser)
                 {
-                    ModelState.AddModelError(string.Empty, "Cédula o contraseña incorrectos.");
+                    ModelState.AddModelError(string.Empty, "Usuario o contraseña incorrectos.");
+                    TempData["ErrorMessage"] = "El usuario o la contraseña son incorrectos.";
                     return View(login);
                 }
 

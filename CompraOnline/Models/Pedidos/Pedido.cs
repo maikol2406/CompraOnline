@@ -21,5 +21,6 @@ namespace CompraOnline.Models.Pedidos
         [Required]
         [Display(Name = "Estado del pedido")]
         public bool estadoPedido { get; set; }
+        public DateTime fechaCreacion { get; set; }
     }
 }

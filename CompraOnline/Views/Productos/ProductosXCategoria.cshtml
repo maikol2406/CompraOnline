@@ -4,13 +4,20 @@
     ViewData["Title"] = "ProductosXCategoria";
     var productosAgrupados = Model.GroupBy(p => p.idCategoria);
     List<CompraOnline.Models.Productos.Categoria> listaCategorias = ViewBag.listaCategorias;
+    int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
 }
 
 <h1>ProductosXCategoria</h1>
 
-<p>
-    <a asp-action="CrearProducto" class="btn btn-success">Crear un producto</a>
-</p>
+@if (idUsuario == 1)
+{
+    <p>
+        <a asp-action="CrearProducto" class="btn btn-primary">Crear un producto</a>
+    </p>
+    <p>
+        <a asp-action="BuscarProducto" class="btn btn-success">Buscar un producto</a>
+    </p>
+}
 
 @foreach (var productoAgrupado in productosAgrupados)
 {
@@ -23,9 +30,9 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>
+                        @* <th>
                             @Html.DisplayNameFor(model => model.idProducto)
-                        </th>
+                        </th> *@
                         <th>
                             @Html.DisplayNameFor(model => model.nombreProducto)
                         </th>
@@ -47,12 +54,12 @@
                         <th>
                             @Html.DisplayNameFor(model => model.stock)
                         </th>
-                        <th>
+                        @* <th>
                             Categoría
-                        </th>
-                        <th>
+                        </th> *@
+                        @* <th>
                             @Html.DisplayNameFor(model => model.promocion)
-                        </th>
+                        </th> *@
                         <th>
                             Opciones
                         </th>
@@ -62,9 +69,9 @@
                     @foreach (var producto in productoAgrupado)
                     {
                         <tr>
-                            <td>
+                            @* <td>
                                 @Html.DisplayFor(modelItem => producto.idProducto)
-                            </td>
+                            </td> *@
                             <td>
                                 @Html.DisplayFor(modelItem => producto.nombreProducto)
                             </td>
@@ -89,17 +96,27 @@
                             <td>
                                 @Html.DisplayFor(modelItem => producto.stock)
                             </td>
-                            <td>
+                            @* <td>
                                 @categoria.nombreCategoria
-                            </td>
-                            <td>
+                            </td> *@
+                            @* <td>
                                 @Html.DisplayFor(modelItem => producto.promocion)
-                            </td>
+                            </td> *@
                             <td>
-                                @Html.ActionLink("Editar", "EditarProducto", new { idProducto = producto.idProducto }) |
-                                @Html.ActionLink("Detalles", "DetallesProducto", new { idProducto = producto.idProducto }) |
+                                @if (idUsuario == 1)
+                                {
+                                    @Html.ActionLink("Editar", "EditarProducto", new { idProducto = producto.idProducto }, new { @class="btn btn-warning"})
+                                }
+                                @Html.ActionLink("Detalles", "DetallesProducto", new { idProducto = producto.idProducto }, new { @class = "btn btn-info" })
                                 @* @Html.ActionLink("Eliminar", "EliminarProducto", new { idProducto = producto.idProducto }) *@
-                                @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = producto.idProducto })
+                                @if (producto.stock > 0)
+                                {
+                                    @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = producto.idProducto }, new { @class = "btn btn-success" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = producto.idProducto }, new { @class = "btn btn-success disabled" })
+                                }
                             </td>
                         </tr>
                     }
