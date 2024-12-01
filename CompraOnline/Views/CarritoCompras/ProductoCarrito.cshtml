@@ -2,75 +2,66 @@
 
 @{
     ViewData["Title"] = "ProductoCarrito";
-    // float precio = ViewBag.productoPrecio;
     float precio = ViewBag.productoPrecio != null ? (float)ViewBag.productoPrecio : 0.0f;
 }
 
-<h1>ProductoCarrito</h1>
+<h1 class="text-center my-4">Producto Carrito</h1>
 
-<h4>CarritoCompra</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="ProductoCarrito">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="idCarrito" class="control-label" hidden></label>
-                <input asp-for="idCarrito" class="form-control" type="hidden"/>
-                <span asp-validation-for="idCarrito" class="text-danger" hidden></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="idUsuario" class="control-label" hidden></label>
-                <input asp-for="idUsuario" class="form-control" type="hidden"/>
-                <span asp-validation-for="idUsuario" class="text-danger" hidden></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="idPedido" class="control-label" hidden></label>
-                <input asp-for="idPedido" class="form-control" type="hidden"/>
-                <span asp-validation-for="idPedido" class="text-danger" hidden></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="idProducto" class="control-label" hidden></label>
-                <input asp-for="idProducto" class="form-control" type="hidden"/>
-                <span asp-validation-for="idProducto" class="text-danger" hidden></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Nombre del producto</label>
-                <input value="@ViewBag.producto" class="form-control" readonly />
+<div class="container">
+    <h4 class="text-secondary">Detalles del Carrito</h4>
+    <hr />
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <form asp-action="ProductoCarrito">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            </div>
-            <div class="form-group">
-                <label asp-for="cantidad" class="control-label">Cantidad</label>
-                <input asp-for="cantidad" id="cantidadInput" class="form-control" value="1" />
-                <span asp-validation-for="cantidad" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="montoTotal" class="control-label">Monto Total</label>
-                <input asp-for="montoTotal" id="montoTotalInput" class="form-control" readonly value="0.00"/>
-                <span asp-validation-for="montoTotal" class="text-danger"></span>
-            </div>
-            <input type="hidden" id="precioProducto" value="@precio" />
+                <input asp-for="idCarrito" class="form-control d-none" />
+                <input asp-for="idUsuario" class="form-control d-none" />
+                <input asp-for="idPedido" class="form-control d-none" />
+                <input asp-for="idProducto" class="form-control d-none" />
 
-            <div class="form-group">
-                <input type="submit" value="Agregar producto" class="btn btn-primary" />
-            </div>
-        </form>
+                <div class="form-group mb-3">
+                    <label class="form-label">Nombre del producto</label>
+                    <input value="@ViewBag.producto" class="form-control" readonly />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label" for="cantidadInput">Cantidad</label>
+                    <input asp-for="cantidad" id="cantidadInput" class="form-control" value="1" />
+                    <span asp-validation-for="cantidad" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label class="form-label" for="montoTotalInput">Monto Total</label>
+                    <input asp-for="montoTotal" id="montoTotalInput" class="form-control" readonly value="0.00" />
+                    <span asp-validation-for="montoTotal" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" id="precioProducto" value="@precio" />
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-cart-plus"></i> Agregar producto
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="productosXCategoria" asp-controller="Productos" class="btn btn-danger">Regresar a la lista de productos</a>
+    <div class="text-center mt-3">
+        <a asp-action="productosXCategoria" asp-controller="Productos" class="btn btn-danger">
+            <i class="bi bi-arrow-left-circle"></i> Regresar a la lista de productos
+        </a>
+    </div>
 </div>
 
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Obtener referencias a los elementos
             const cantidadInput = document.getElementById("cantidadInput");
             const montoTotalInput = document.getElementById("montoTotalInput");
             const precioProductoField = document.getElementById("precioProducto");
 
-            // Validar el valor del precio del producto
             const precioProducto = parseFloat(precioProductoField.value);
 
             if (isNaN(precioProducto)) {
@@ -79,21 +70,18 @@
                 return;
             }
 
-            // Función para calcular el monto total
             function calcularMontoTotal() {
-                const cantidad = parseFloat(cantidadInput.value) || 0; // Por defecto, toma 0 si no es válido
+                const cantidad = parseFloat(cantidadInput.value) || 0;
                 if (cantidad <= 0) {
                     montoTotalInput.value = "0.00";
                 } else {
                     const montoTotal = cantidad * precioProducto;
-                    montoTotalInput.value = montoTotal.toFixed(2); // Redondear a 2 decimales
+                    montoTotalInput.value = montoTotal.toFixed(2);
                 }
             }
 
-            // Calcular el monto total al cargar la página
             calcularMontoTotal();
 
-            // Escuchar cambios en el campo de cantidad
             cantidadInput.addEventListener("input", calcularMontoTotal);
         });
     </script>
@@ -101,44 +89,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-
-@* @section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Obtener referencias a los elementos
-            const cantidadInput = document.getElementById("cantidadInput");
-            const montoTotalInput = document.getElementById("montoTotalInput");
-            const precioProductoField = document.getElementById("precioProducto");
-
-            // Validar el valor del precio del producto
-            const precioProducto = parseFloat(precioProductoField.value);
-
-            if (isNaN(precioProducto)) {
-                console.error("El precio del producto no es válido o está vacío.");
-                montoTotalInput.value = "0.00";
-                return;
-            }
-
-            // Función para calcular el monto total
-            function calcularMontoTotal() {
-                const cantidad = parseFloat(cantidadInput.value) || 0; // Por defecto, toma 0 si no es válido
-                if (cantidad <= 0) {
-                    montoTotalInput.value = "0.00";
-                } else {
-                    const montoTotal = cantidad * precioProducto;
-                    montoTotalInput.value = montoTotal.toFixed(2); // Redondear a 2 decimales
-                }
-            }
-
-            // Calcular el monto total al cargar la página
-            calcularMontoTotal();
-
-            // Escuchar cambios en el campo de cantidad
-            cantidadInput.addEventListener("input", calcularMontoTotal);
-        });
-    </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-} *@

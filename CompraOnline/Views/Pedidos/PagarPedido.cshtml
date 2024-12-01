@@ -1,78 +1,97 @@
 ﻿@model CompraOnline.Models.Pedidos.Pago
 
 @{
-    ViewData["Title"] = "PagarPedido";
+    ViewData["Title"] = "Pagar Pedido";
 }
 
-<h1>PagarPedido</h1>
+<h1 class="text-center mb-4">Pagar Pedido</h1>
 
-<h4>Pago</h4>
+<h4 class="text-center mb-3">Detalles del Pago</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="PagarPedido">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="pk_tsal001" class="control-label"></label>
-                <input asp-for="pk_tsal001" class="form-control" readonly/>
-                <span asp-validation-for="pk_tsal001" class="text-danger"></span>
+
+<div class="row justify-content-center min-vh-100">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form asp-action="PagarPedido">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="pk_tsal001" class="control-label">PK TSAL001</label>
+                        <input asp-for="pk_tsal001" class="form-control" readonly />
+                        <span asp-validation-for="pk_tsal001" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="idPedido" class="control-label">ID Pedido</label>
+                        <input asp-for="idPedido" class="form-control" readonly />
+                        <span asp-validation-for="idPedido" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="terminalId" class="control-label">Terminal ID</label>
+                        <input asp-for="terminalId" class="form-control" readonly />
+                        <span asp-validation-for="terminalId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="transactionType" class="control-label">Tipo de Transacción</label>
+                        <input asp-for="transactionType" class="form-control" readonly />
+                        <span asp-validation-for="transactionType" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="invoice" class="control-label">Factura</label>
+                        <input asp-for="invoice" class="form-control" readonly />
+                        <span asp-validation-for="invoice" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="totalAmount" class="control-label">Monto Total</label>
+                        <input asp-for="totalAmount" class="form-control" readonly />
+                        <span asp-validation-for="totalAmount" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="taxAmount" class="control-label">Monto de Impuestos</label>
+                        <input asp-for="taxAmount" class="form-control" readonly />
+                        <span asp-validation-for="taxAmount" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group" hidden>
+                        <label asp-for="tipAmount" class="control-label">Propina</label>
+                        <input asp-for="tipAmount" class="form-control" type="hidden" />
+                        <span asp-validation-for="tipAmount" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="clientEmail" class="control-label">Correo del Cliente</label>
+                        <input asp-for="clientEmail" class="form-control" />
+                        <span asp-validation-for="clientEmail" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group" hidden>
+                        <label asp-for="idCliente" class="control-label">ID Cliente</label>
+                        <input asp-for="idCliente" class="form-control" type="hidden" />
+                        <span asp-validation-for="idCliente" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group text-center mt-2">
+                        <input type="submit" value="Realizar Pago" class="btn btn-success btn-lg" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="idPedido" class="control-label"></label>
-                <input asp-for="idPedido" class="form-control" readonly/>
-                <span asp-validation-for="idPedido" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="terminalId" class="control-label"></label>
-                <input asp-for="terminalId" class="form-control" readonly/>
-                <span asp-validation-for="terminalId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="transactionType" class="control-label"></label>
-                <input asp-for="transactionType" class="form-control" readonly/>
-                <span asp-validation-for="transactionType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="invoice" class="control-label"></label>
-                <input asp-for="invoice" class="form-control" readonly/>
-                <span asp-validation-for="invoice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="totalAmount" class="control-label"></label>
-                <input asp-for="totalAmount" class="form-control" readonly/>
-                <span asp-validation-for="totalAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="taxAmount" class="control-label"></label>
-                <input asp-for="taxAmount" class="form-control" readonly/>
-                <span asp-validation-for="taxAmount" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="tipAmount" class="control-label" hidden></label>
-                <input asp-for="tipAmount" class="form-control" type="hidden"/>
-                <span asp-validation-for="tipAmount" class="text-danger" hidden></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="clientEmail" class="control-label"></label>
-                <input asp-for="clientEmail" class="form-control" />
-                <span asp-validation-for="clientEmail" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="idCliente" class="control-label" hidden></label>
-                <input asp-for="idCliente" class="form-control" type="hidden"/>
-                <span asp-validation-for="idCliente" class="text-danger" hidden></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Realizar pago" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+        <div class="mt-4 text-center">
+            <a asp-action="VerCarrito" asp-controller="CarritoCompras" class="btn btn-danger">Volver al Carrito</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="VerCarrito" asp-controller="CarritoCompras">Back to List</a>
-</div>
+
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

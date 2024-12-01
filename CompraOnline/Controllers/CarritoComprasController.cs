@@ -28,7 +28,7 @@ namespace CompraOnline.Controllers
                 {
                     if (item.idProducto == item2.idProducto)
                     {
-                        totalCarrito = totalCarrito + (item2.precioPromo * item.cantidad);
+                        totalCarrito = (float)(totalCarrito + (item2.precioPromo * item.cantidad));
                     }
                 }
             }

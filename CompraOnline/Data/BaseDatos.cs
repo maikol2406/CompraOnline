@@ -325,6 +325,39 @@ namespace CompraOnline.Data
             return producto;
         }
 
+        public async Task<List<Producto>> obtenerProductosPromo()
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Producto> listaProductos = new List<Producto>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT * FROM Productos WHERE promocion = 1";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Producto producto = new Producto();
+                            producto.idProducto = Convert.ToInt32(reader["idProducto"].ToString());
+                            producto.nombreProducto = Convert.ToString(reader["nombreProducto"].ToString());
+                            producto.descripcionProducto = Convert.ToString(reader["descripcionProducto"].ToString());
+                            producto.precio = float.Parse(reader["precio"].ToString());
+                            producto.precioPromo = float.Parse(reader["precioPromo"].ToString());
+                            producto.stock = Convert.ToInt32(reader["stock"].ToString());
+                            producto.idCategoria = Convert.ToInt32(reader["idCategoria"].ToString());
+                            producto.promocion = Convert.ToBoolean(reader["promocion"].ToString());
+
+                            listaProductos.Add(producto);
+                        }
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return listaProductos;
+        }
+
         public async Task<List<Categoria>> obtenerCategorias()
         {
             SqlConnectionStringBuilder builder = conexion();
@@ -450,7 +483,7 @@ namespace CompraOnline.Data
                     await conn.OpenAsync();
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
                             Pedido pedido = new Pedido();
                             pedido.idPedido = Convert.ToInt32(reader["idPedido"].ToString());
@@ -458,7 +491,8 @@ namespace CompraOnline.Data
                             //pedido.cantidad = Convert.ToInt32(reader["cantidad"].ToString());
                             pedido.precioTotal = float.Parse(reader["precioTotal"].ToString());
                             pedido.estadoPedido = Convert.ToBoolean(reader["estadoPedido"].ToString());
-                            pedido.fechaCreacion = Convert.ToDateTime(reader["fechaCreacion"]);
+                            //pedido.fechaCreacion = Convert.ToDateTime(reader["fechaCreacion"]);
+                            pedido.fechaCreacion = reader.IsDBNull(reader.GetOrdinal("fechaCreacion")) ? (DateTime?)null : Convert.ToDateTime(reader["fechaCreacion"]);
 
                             listaPedidos.Add(pedido);
                         }
@@ -694,7 +728,7 @@ namespace CompraOnline.Data
 
                     cmd.Parameters.AddWithValue("@IDPEDIDO", idPedido);
 
-                    await conn.OpenAsync();
+                    conn.OpenAsync();
                     try
                     {
                         using (SqlDataReader reader = cmd.ExecuteReader())
@@ -712,7 +746,6 @@ namespace CompraOnline.Data
                                 listaCarritos.Add(carritoCompra);
                             }
                         }
-                        await conn.CloseAsync();
                     }
                     catch (SqlException sqlEx)
                     {
@@ -967,9 +1000,7 @@ namespace CompraOnline.Data
             {
                 using (SqlConnection conn = new SqlConnection(builder.ToString()))
                 {
-                    string query = "SELECT C.idProducto, C.cantidad FROM Pedidos P" +
-                        "INNER JOIN CarritoCompras C ON P.idPedido = C.idPedido" +
-                        "WHERE P.idPedido = @IDPEDIDO AND P.estadoPedido = 1";
+                    string query = "SELECT C.idProducto, C.cantidad FROM Pedidos P INNER JOIN CarritoCompras C ON P.idPedido = C.idPedido WHERE P.idPedido = @IDPEDIDO AND P.estadoPedido = 1";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -995,6 +1026,31 @@ namespace CompraOnline.Data
             {
                 return listaCantidades = new List<CantidadesProducto>();
                 throw new Exception("Error cargando las cantidades de productos" + e.Message);
+            }
+        }
+
+        public void actualizarCantidadProducto(int idProducto, int stock)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                try
+                {
+                    conn.OpenAsync();
+                    var query = "UPDATE Productos SET stock = @STOCK WHERE idProducto = @IDPRODUCTO";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@STOCK", stock);
+                        cmd.Parameters.AddWithValue("@IDPRODUCTO", idProducto);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    throw new Exception("Error al actualizar el estado del pedido. " + e.Message);
+                }
             }
         }
 

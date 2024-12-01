@@ -197,6 +197,7 @@ namespace CompraOnline.Controllers
                                                 if (item.idProducto == item2.idProducto)
                                                 {
                                                     item2.stock = item2.stock - item.cantidad;
+                                                    db.actualizarCantidadProducto(item.idProducto, item2.stock);
                                                 }
                                             }
                                         }
@@ -209,8 +210,9 @@ namespace CompraOnline.Controllers
                 }
                 return RedirectToAction("VerCarrito", "CarritoCompras");
             }
-            catch
+            catch(Exception e)
             {
+                throw new Exception("Error " + e.Message);
                 return RedirectToAction("PagarPedido", "Pedidos", new { idPedido = pago.idPedido });
             }
         }

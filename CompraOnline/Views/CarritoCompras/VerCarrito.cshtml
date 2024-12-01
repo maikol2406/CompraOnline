@@ -7,118 +7,81 @@
     float totalCarrito = ViewBag.totalCarrito;
 }
 
-<h1>VerCarrito</h1>
+<h1 class="text-center my-4">Ver Carrito</h1>
 
+@if (Model.Any())
+{
+    <section>
+        <div class="d-flex justify-content-between mb-4">
+            <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">
+                <i class="bi bi-credit-card"></i> Pagar pedido
+            </a>
+            <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Agregar productos
+            </a>
+        </div>
 
-    @* <a asp-action="Create">Create New</a> *@
-    @* <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">Pagar pedido</a> *@
-    @* <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.Any() ? Model.First().idPedido : 0 })" class="btn btn-primary">Pagar pedido</a> *@
-    @if (Model.Any())
-    {
-        <section>
-            <section>
-                <p>
-                    <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">Pagar pedido</a>
-                    <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">Agregar productos</a>
-                </p>
-            </section>
-            <section>
-                <p>Monto total: @totalCarrito</p>
-            </section>
-        </section>
+        <div class="text-end mb-4">
+            <p><strong>Monto total:</strong> @totalCarrito</p>
+        </div>
+    </section>
 
-        <hr />
-        <table class="table">
-            <thead>
+    <hr />
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre del cliente</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Monto Total</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    @* <th>
-                        @Html.DisplayNameFor(model => model.idCarrito)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.idUsuario)
-                    </th> *@
-                    <th>
-                        Nombre del cliente
-                    </th>
-                    @* <th>
-                        @Html.DisplayNameFor(model => model.idPedido)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.idProducto)
-                    </th> *@
-                    <th>
-                        Producto
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.cantidad)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.montoTotal)
-                    </th>
-                    <th>Opciones</th>
+                    <td>
+                        @foreach (var item2 in usuarios)
+                        {
+                            if (item.idUsuario == item2.idUsuario)
+                            {
+                                @item2.nombreCompleto
+                            }
+                        }
+                    </td>
+                    <td>
+                        @foreach (var item2 in productos)
+                        {
+                            if (item.idProducto == item2.idProducto)
+                            {
+                                @($"{item2.nombreProducto} - {item2.descripcionProducto}")
+                            }
+                        }
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.cantidad)</td>
+                    <td>@Html.DisplayFor(modelItem => item.montoTotal)</td>
+                    <td>
+                        <a href="@Url.Action("EditarProductoCarrito", new { idCarrito = item.idCarrito })" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil-square"></i> Editar
+                        </a>
+                        <a href="@Url.Action("EliminarProductoCarrito", new { idCarrito = item.idCarrito })" class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Eliminar
+                        </a>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        @* <td>
-                            @Html.DisplayFor(modelItem => item.idCarrito)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.idUsuario)
-                        </td> *@
-                        <td>
-                            @foreach (var item2 in usuarios)
-                            {
-                                if (item.idUsuario == item2.idUsuario)
-                                {
-                                    @item2.nombreCompleto
-                                }
-                            }
-                        </td>
-                        @* <td>
-                            @Html.DisplayFor(modelItem => item.idPedido)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.idProducto)
-                        </td> *@
-                        <td>
-                            @foreach (var item2 in productos)
-                            {
-                                if (item.idProducto == item2.idProducto)
-                                {
-                                    @* @item2.descripcionProducto *@
-                                    @($"{item2.nombreProducto} {item2.descripcionProducto}")
-                                }
-                            }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.cantidad)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.montoTotal)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Editar", "EditarProductoCarrito", new { idCarrito = item.idCarrito }) |
-                            @* @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) | *@
-                            @Html.ActionLink("Eliminar", "EliminarProductoCarrito", new { idCarrito = item.idCarrito })
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <br />
-        <section>
-            <h1 class="text-center">No tienes artículos en el carrito.</h1>
-        </section>
-       <section>
-            <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">Agregar productos</a>
-       </section>
-    }
-
-
-
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <section>
+        <h1 class="text-center">No tienes artículos en el carrito.</h1>
+    </section>
+    <section class="text-center">
+        <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Agregar productos
+        </a>
+    </section>
+}

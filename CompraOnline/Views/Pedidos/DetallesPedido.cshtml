@@ -1,61 +1,63 @@
 ﻿@model CompraOnline.Models.Pedidos.Pedido
 
 @{
-    ViewData["Title"] = "DetallesPedido";
+    ViewData["Title"] = "Detalles del Pedido";
     List<CompraOnline.Models.Usuarios.Usuario> usuarios = ViewBag.listaUsuarios;
 }
 
-<h1>DetallesPedido</h1>
+<h1 class="text-center mb-4">Detalles del Pedido</h1>
 
-<section>
-    <h4>Pedido</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.idPedido)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.idPedido)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.idUsuario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.idUsuario)
-        </dd>
-        <dt class = "col-sm-2">
-            Nombre Usuario
-        </dt>
-        <dd class = "col-sm-10">
-            @foreach (var item2 in usuarios)
-            {
-                if (Model.idUsuario == item2.idUsuario)
-                {
-                    @item2.nombreCompleto
-                }
-            }
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.precioTotal)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.precioTotal)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.estadoPedido)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.estadoPedido)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.fechaCreacion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.fechaCreacion)
-        </dd>
-    </dl>
-</section>
-<section>
-    @* @Html.ActionLink("Editar Pedido", "Edit", new { /* id = Model.PrimaryKey */ }) | *@
-    <a asp-action="MisPedidos" class="btn btn-danger">Regresar a la lista de pedidos</a>
-</section>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Nombre del Usuario</h5>
+                    <p class="card-text">
+                        @foreach (var item2 in usuarios)
+                        {
+                            if (Model.idUsuario == item2.idUsuario)
+                            {
+                                @item2.nombreCompleto
+                            }
+                        }
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Precio Total</h5>
+                    <p class="card-text">@Html.DisplayFor(model => model.precioTotal)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Estado del Pedido</h5>
+                    <p class="card-text">@Html.DisplayFor(model => model.estadoPedido)</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Fecha de Creación</h5>
+                    <p class="card-text">@Html.DisplayFor(model => model.fechaCreacion)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-3">
+        <div class="col-12">
+            <a asp-action="MisPedidos" class="btn btn-danger">
+                <i class="bi bi-arrow-left-circle"></i> Regresar a la lista de pedidos
+            </a>
+        </div>
+    </div>
+</div>

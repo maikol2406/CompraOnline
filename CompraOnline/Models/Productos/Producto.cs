@@ -17,7 +17,7 @@ namespace CompraOnline.Models.Productos
         public float precio { get; set; }
         [Required]
         [Display(Name = "Precio promoción")]
-        public float precioPromo { get; set; }
+        public float? precioPromo { get; set; }
         [Required]
         [Display(Name = "Cantidas en stock")]
         public int stock { get; set; }

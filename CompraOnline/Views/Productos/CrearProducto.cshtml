@@ -1,86 +1,88 @@
 ﻿@model CompraOnline.Models.Productos.Producto
 
 @{
-    ViewData["Title"] = "CrearProducto";
+    ViewData["Title"] = "Crear Producto";
 }
 
-<h1>CrearProducto</h1>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h1 class="text-center mb-4">
+                <i class="bi bi-pencil-square"></i> Crear Producto
+            </h1>
 
-<h4>Producto</h4>
-<hr />
-<section class="row">
-    <section class="col-md-4">
-        <form asp-action="CrearProducto">
-            <section asp-validation-summary="ModelOnly" class="text-danger"></section>
-            @* <section class="form-group">
-                <label asp-for="idProducto" class="control-label"></label>
-                <input asp-for="idProducto" class="form-control" />
-                <span asp-validation-for="idProducto" class="text-danger"></span>
-            </section> *@
-            <section class="form-group">
-                <label asp-for="nombreProducto" class="control-label"></label>
-                <input asp-for="nombreProducto" class="form-control" />
-                <span asp-validation-for="nombreProducto" class="text-danger"></span>
-            </section>
-            <section class="form-group">
-                <label asp-for="descripcionProducto" class="control-label"></label>
-                <input asp-for="descripcionProducto" class="form-control" />
-                <span asp-validation-for="descripcionProducto" class="text-danger"></span>
-            </section>
-            <section class="form-group">
-                <label asp-for="precio" class="control-label"></label>
-                <input asp-for="precio" class="form-control" />
-                <span asp-validation-for="precio" class="text-danger"></span>
-            </section>
-            <section class="form-group">
-                <label asp-for="precioPromo" class="control-label"></label>
-                <input asp-for="precioPromo" class="form-control" />
-                <span asp-validation-for="precioPromo" class="text-danger"></span>
-            </section>
-            <section class="form-group">
-                <label asp-for="stock" class="control-label"></label>
-                <input asp-for="stock" class="form-control" />
-                <span asp-validation-for="stock" class="text-danger"></span>
-            </section>
-            @* <section class="form-group">
-                <label asp-for="idCategoria" class="control-label"></label>
-                <input asp-for="idCategoria" class="form-control" />
-                <span asp-validation-for="idCategoria" class="text-danger"></span>
-            </section> *@
-            <section class="form-group">
-                <label asp-for="idCategoria" class="control-label"></label>
-                <select asp-for="idCategoria" class="form-control" asp-items="ViewBag.Categorias">
-                    <option value="">Seleccione una categoría</option>
-                </select>
-                <span asp-validation-for="idCategoria" class="text-danger"></span>
-            </section>
-            <section class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="promocion" /> @Html.DisplayNameFor(model => model.promocion)
-                </label>
-            </section>
+            <h4>Ingrese los detalles del producto</h4>
+            <hr />
 
-            <section asp-validation-summary="ModelOnly" class="alert alert-danger">
-                <strong>Errores:</strong>
-                <ul>
-                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                </ul>
-            </section>
+            <form asp-action="CrearProducto">
+                @if (ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+                {
+                    <section asp-validation-summary="ModelOnly" class="text-danger mb-3"></section>
+                }
 
-            <section class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </section>
-        </form>
-    </section>
-</section>
+                <section class="form-group mb-3">
+                    <label asp-for="nombreProducto" class="form-label"></label>
+                    <input asp-for="nombreProducto" class="form-control" placeholder="Nombre del producto" />
+                    <span asp-validation-for="nombreProducto" class="text-danger"></span>
+                </section>
 
-<section>
-    <a asp-action="Index">Back to List</a>
-</section>
+                <section class="form-group mb-3">
+                    <label asp-for="descripcionProducto" class="form-label"></label>
+                    <textarea asp-for="descripcionProducto" class="form-control" rows="3" placeholder="Descripción del producto"></textarea>
+                    <span asp-validation-for="descripcionProducto" class="text-danger"></span>
+                </section>
+
+                <section class="form-group mb-3">
+                    <label asp-for="precio" class="form-label"></label>
+                    <input asp-for="precio" class="form-control" type="number" step="0.01" placeholder="Precio" />
+                    <span asp-validation-for="precio" class="text-danger"></span>
+                </section>
+
+                <section class="form-group mb-3">
+                    <label asp-for="precioPromo" class="form-label"></label>
+                    <input asp-for="precioPromo" class="form-control" type="number" step="0.01" placeholder="Precio Promocional" />
+                    <span asp-validation-for="precioPromo" class="text-danger"></span>
+                </section>
+
+                <section class="form-group mb-3">
+                    <label asp-for="stock" class="form-label"></label>
+                    <input asp-for="stock" class="form-control" type="number" placeholder="Cantidad en stock" />
+                    <span asp-validation-for="stock" class="text-danger"></span>
+                </section>
+
+                <section class="form-group mb-3">
+                    <label asp-for="idCategoria" class="form-label"></label>
+                    <select asp-for="idCategoria" class="form-select" asp-items="ViewBag.Categorias">
+                        <option value="">Seleccione una categoría</option>
+                    </select>
+                    <span asp-validation-for="idCategoria" class="text-danger"></span>
+                </section>
+
+                <section class="form-group form-check mb-3">
+                    <input class="form-check-input" type="checkbox" asp-for="promocion" />
+                    <label class="form-check-label" for="promocion">
+                        @Html.DisplayNameFor(model => model.promocion)
+                    </label>
+                </section>
+
+                <section class="form-group text-center">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle"></i> Crear Producto
+                    </button>
+                </section>
+            </form>
+
+            <section class="text-center mt-3">
+                <a asp-action="productosXCategoria" class="btn btn-danger btn-sm">
+                    <i class="bi bi-arrow-left-circle"></i> Regresar a la lista
+                </a>
+            </section>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

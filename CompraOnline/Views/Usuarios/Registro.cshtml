@@ -4,50 +4,69 @@
     ViewData["Title"] = "Registro";
 }
 
-<h1>Registro</h1>
-
-<h4>Usuario</h4>
-<hr />
-<section class="row">
-    <section class="col-md-4">
-        <form asp-action="Registro">
-            <section asp-validation-summary="ModelOnly" class="text-danger"></section>
-            @* <section class="form-group">
-                <label asp-for="idUsuario" class="control-label"></label>
-                <input asp-for="idUsuario" class="form-control" />
-                <span asp-validation-for="idUsuario" class="text-danger"></span>
-            </section> *@
-            <section class="form-group">
-                <label asp-for="username" class="control-label"></label>
-                <input asp-for="username" class="form-control" />
-                <span asp-validation-for="username" class="text-danger"></span>
-            </section>
-            <section class="form-group">
-                <label asp-for="password" class="control-label"></label>
-                <input asp-for="password" class="form-control" />
-                <span asp-validation-for="password" class="text-danger"></span>
-            </section>
-            <section class="form-group mb-3">
-                <label asp-for="confirmaPassword" class="control-label"></label>
-                <input asp-for="confirmaPassword" class="form-control" type="password" placeholder="Confirme su contraseña" />
-                <span asp-validation-for="confirmaPassword" class="text-danger"></span>
-            </section>
-            <section class="form-group">
-                <label asp-for="nombreCompleto" class="control-label"></label>
-                <input asp-for="nombreCompleto" class="form-control" />
-                <span asp-validation-for="nombreCompleto" class="text-danger"></span>
-            </section>
-            <section class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </section>
-        </form>
-    </section>
-</section>
-
-<section>
-    <a asp-action="Index">Back to List</a>
-</section>
+<div class="container-fluid d-flex justify-content-center align-items-center" style="height: 90vh;">
+    <div class="card shadow-lg border-0 rounded" style="width: 100%; max-width: 400px;">
+        <div class="card-header bg-success text-white text-center">
+            <h5 class="card-title">
+                <i class="bi bi-person-plus-fill"></i> Registro de Usuario
+            </h5>
+        </div>
+        <div class="card-body">
+            <form asp-action="Registro">
+                <section asp-validation-summary="ModelOnly" class="text-danger mb-3"></section>
+                <div class="form-group mb-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        </div>
+                        <input asp-for="username" class="form-control form-control-sm text-center" placeholder="Ingrese su usuario" />
+                    </div>
+                    <span asp-validation-for="username" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        </div>
+                        <input asp-for="password" class="form-control form-control-sm text-center" type="password" placeholder="Ingrese su contraseña" />
+                    </div>
+                    <span asp-validation-for="password" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        </div>
+                        <input asp-for="confirmaPassword" class="form-control form-control-sm text-center" type="password" placeholder="Confirme su contraseña" />
+                    </div>
+                    <span asp-validation-for="confirmaPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="bi bi-person-lines-fill"></i></span>
+                        </div>
+                        <input asp-for="nombreCompleto" class="form-control form-control-sm text-center" placeholder="Nombre completo" />
+                    </div>
+                    <span asp-validation-for="nombreCompleto" class="text-danger"></span>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-person-check-fill"></i> Registrar
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer text-center">
+            <a asp-action="Index" asp-controller="Home" class="btn btn-danger btn-lg">
+                <i class="bi bi-arrow-left-circle"></i> Volver al inicio
+            </a>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

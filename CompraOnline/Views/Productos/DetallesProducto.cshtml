@@ -1,70 +1,100 @@
 ﻿@model CompraOnline.Models.Productos.Producto
 
 @{
-    ViewData["Title"] = "DetallesProducto";
+    ViewData["Title"] = "Detalles Producto";
     int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
 }
 
-<h1>DetallesProducto</h1>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Detalles del Producto</h1>
 
-<div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.idProducto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.idProducto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.nombreProducto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.nombreProducto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.descripcionProducto)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.descripcionProducto)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.precio)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.precio)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.precioPromo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.precioPromo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.stock)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.stock)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.idCategoria)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.idCategoria)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.promocion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.promocion)
-        </dd>
-    </dl>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">Producto: @Html.DisplayFor(model => model.nombreProducto)</h5>
+        </div>
+        <div class="card-body">
+
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            @Html.DisplayNameFor(model => model.descripcionProducto)
+                        </div>
+                        <div class="card-body">
+                            @Html.DisplayFor(model => model.descripcionProducto)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            @Html.DisplayNameFor(model => model.precio)
+                        </div>
+                        <div class="card-body">
+                            @Html.DisplayFor(model => model.precio)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            @Html.DisplayNameFor(model => model.precioPromo)
+                        </div>
+                        <div class="card-body">
+                            @Html.DisplayFor(model => model.precioPromo)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            @Html.DisplayNameFor(model => model.stock)
+                        </div>
+                        <div class="card-body">
+                            @Html.DisplayFor(model => model.stock)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
+                            @Html.DisplayNameFor(model => model.promocion)
+                        </div>
+                        <div class="card-body">
+                            @Html.DisplayFor(model => model.promocion)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3 text-center">
+        @if (idUsuario == 1)
+        {
+            <a href="@Url.Action("EditarProducto", new { idProducto = Model.idProducto })" class="btn btn-warning btn-lg">
+                <i class="bi bi-pencil-square"></i> Editar
+            </a>
+        }
+    </div>
+    <div class="mt-3 text-center">
+        <a asp-action="productosXCategoria" class="btn btn-danger btn-lg mt-3">
+            <i class="bi bi-arrow-left-circle"></i> Regresar a la lista de productos
+        </a>
+    </div>
 </div>
-<div>
-    @if (idUsuario == 1)
-    {
-        @Html.ActionLink("Editar", "EditarProducto", new { idProducto = Model.idProducto }, new { @class = "btn btn-warning" })
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <a asp-action="productosXCategoria" class="btn btn-danger">Regresar a la lista de productos</a>
-</div>
+}

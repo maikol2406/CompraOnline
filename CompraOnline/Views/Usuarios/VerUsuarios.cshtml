@@ -1,59 +1,42 @@
 ﻿@model IEnumerable<CompraOnline.Models.Usuarios.Usuario>
 
 @{
-    ViewData["Title"] = "VerUsuarios";
+    ViewData["Title"] = "Ver Usuarios";
 }
 
-<h1>VerUsuarios</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.idUsuario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.nombreCompleto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.username)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.password)
-            </th>
-@*             <th>
-                @Html.DisplayNameFor(model => model.confirmaPassword)
-            </th> *@
-            @* <th></th> *@
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.idUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.nombreCompleto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.username)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.password)
-            </td>
-@*             <td>
-                @Html.DisplayFor(modelItem => item.confirmaPassword)
-            </td> *@
-            @* <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td> *@
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Ver Usuarios</h1>
+    <div class="text-center mb-3">
+        <a asp-action="Registro" class="btn btn-success btn-lg">
+            <i class="bi bi-person-plus-fill"></i> Crear Nuevo Usuario
+        </a>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title">@item.nombreCompleto</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Username:</strong> @item.username</p>
+                        <p><strong>ID Usuario:</strong> @item.idUsuario</p>
+                        <p><strong>Password:</strong> ********</p>
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Edit" asp-route-id="@item.idUsuario" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.idUsuario" class="btn btn-info btn-sm">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.idUsuario" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -8,22 +8,29 @@
 
 <form id="buscarProductos" method="post" asp-action="ObtenerProductosFiltro">
     @Html.AntiForgeryToken()
-    <section class="form-group">
-        <label for="nombreProducto">Seleccione el nombre del producto:</label>
-        <select name="nombreProducto" class="form-control" id="productosDropdown">
-            <option value="">Seleccione un nombre de producto</option>
-            @foreach (SelectListItem producto in ViewBag.nombreProductos)
-            {
-                <option value="@producto.Value">@producto.Text</option>
-            }
-        </select>
-    </section>
-    <button type="submit" class="btn btn-primary m-2">Buscar</button>
+
+    <div class="card p-4 shadow-sm">
+        <section class="form-group">
+            <label for="nombreProducto">Seleccione el nombre del producto:</label>
+            <select name="nombreProducto" class="form-select" id="productosDropdown">
+                <option value="">Seleccione un nombre de producto</option>
+                @foreach (SelectListItem producto in ViewBag.nombreProductos)
+                {
+                    <option value="@producto.Value">@producto.Text</option>
+                }
+            </select>
+        </section>
+
+        <div class="d-flex justify-content-center mt-3">
+            <button type="submit" class="btn btn-primary w-50">Buscar</button>
+        </div>
+    </div>
 </form>
 
-<section id="resultadosBusqueda">
+<section id="resultadosBusqueda" class="mt-4">
 
 </section>
+
 
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

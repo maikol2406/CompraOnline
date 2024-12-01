@@ -1,127 +1,81 @@
 ﻿@model IEnumerable<CompraOnline.Models.Productos.Producto>
 
 @{
-    ViewData["Title"] = "ProductosXCategoria";
+    ViewData["Title"] = "Productos por Categoría";
     var productosAgrupados = Model.GroupBy(p => p.idCategoria);
     List<CompraOnline.Models.Productos.Categoria> listaCategorias = ViewBag.listaCategorias;
     int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
 }
 
-<h1>ProductosXCategoria</h1>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Productos por Categoría</h1>
 
-@if (idUsuario == 1)
-{
-    <p>
-        <a asp-action="CrearProducto" class="btn btn-primary">Crear un producto</a>
-    </p>
-    <p>
-        <a asp-action="BuscarProducto" class="btn btn-success">Buscar un producto</a>
-    </p>
-}
-
-@foreach (var productoAgrupado in productosAgrupados)
-{
-    var categoria = listaCategorias.FirstOrDefault(c => c.idCategoria == productoAgrupado.Key);
-    if (categoria != null)
+    @if (idUsuario == 1)
     {
-        <section id="@categoria.idCategoria.ToString().ToLower()">
-            <h3>@categoria.nombreCategoria</h3>
-            <hr />
-            <table class="table">
-                <thead>
-                    <tr>
-                        @* <th>
-                            @Html.DisplayNameFor(model => model.idProducto)
-                        </th> *@
-                        <th>
-                            @Html.DisplayNameFor(model => model.nombreProducto)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.descripcionProducto)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.precio)
-                        </th>
-                        @* @if (productoAgrupado.Any(p => p.promocion))
-                        {
-                            <th>
-                                @Html.DisplayNameFor(model => model.precioPromo)
-                            </th>
-                        } *@
-                        <th>
-                            @Html.DisplayNameFor(model => model.precioPromo)
-                        </th>
-                        <th>
-                            @Html.DisplayNameFor(model => model.stock)
-                        </th>
-                        @* <th>
-                            Categoría
-                        </th> *@
-                        @* <th>
-                            @Html.DisplayNameFor(model => model.promocion)
-                        </th> *@
-                        <th>
-                            Opciones
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var producto in productoAgrupado)
-                    {
-                        <tr>
-                            @* <td>
-                                @Html.DisplayFor(modelItem => producto.idProducto)
-                            </td> *@
-                            <td>
-                                @Html.DisplayFor(modelItem => producto.nombreProducto)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => producto.descripcionProducto)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => producto.precio)
-                            </td>
-                            @if (producto.promocion)
-                            {
-                                <td>
-                                    @Html.DisplayFor(modelItem => producto.precioPromo)
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    Sin promoción
-                                </td>
-                            }
-                            <td>
-                                @Html.DisplayFor(modelItem => producto.stock)
-                            </td>
-                            @* <td>
-                                @categoria.nombreCategoria
-                            </td> *@
-                            @* <td>
-                                @Html.DisplayFor(modelItem => producto.promocion)
-                            </td> *@
-                            <td>
-                                @if (idUsuario == 1)
-                                {
-                                    @Html.ActionLink("Editar", "EditarProducto", new { idProducto = producto.idProducto }, new { @class="btn btn-warning"})
-                                }
-                                @Html.ActionLink("Detalles", "DetallesProducto", new { idProducto = producto.idProducto }, new { @class = "btn btn-info" })
-                                @* @Html.ActionLink("Eliminar", "EliminarProducto", new { idProducto = producto.idProducto }) *@
-                                @if (producto.stock > 0)
-                                {
-                                    @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = producto.idProducto }, new { @class = "btn btn-success" })
-                                }
-                                else
-                                {
-                                    @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = producto.idProducto }, new { @class = "btn btn-success disabled" })
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </section>
+        <div class="mb-3">
+            <a asp-action="CrearProducto" class="btn btn-primary btn-lg"><i class="bi bi-plus-circle"></i> Crear un producto</a>
+            <a asp-action="BuscarProducto" class="btn btn-success btn-lg"><i class="bi bi-search"></i> Buscar un producto</a>
+        </div>
     }
-}
+
+    @foreach (var productoAgrupado in productosAgrupados)
+    {
+        var categoria = listaCategorias.FirstOrDefault(c => c.idCategoria == productoAgrupado.Key);
+        if (categoria != null)
+        {
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h3 class="card-title">@categoria.nombreCategoria</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.nombreProducto)</th>
+                                <th>@Html.DisplayNameFor(model => model.descripcionProducto)</th>
+                                <th>@Html.DisplayNameFor(model => model.precio)</th>
+                                <th>@Html.DisplayNameFor(model => model.precioPromo)</th>
+                                <th>@Html.DisplayNameFor(model => model.stock)</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var producto in productoAgrupado)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => producto.nombreProducto)</td>
+                                    <td>@Html.DisplayFor(modelItem => producto.descripcionProducto)</td>
+                                    <td>@Html.DisplayFor(modelItem => producto.precio)</td>
+                                    @if (producto.promocion)
+                                    {
+                                        <td>@Html.DisplayFor(modelItem => producto.precioPromo)</td>
+                                    }
+                                    else
+                                    {
+                                        <td>Sin promoción</td>
+                                    }
+                                    <td>@Html.DisplayFor(modelItem => producto.stock)</td>
+                                    <td>
+                                        @if (idUsuario == 1)
+                                        {
+                                            <a asp-action="EditarProducto" asp-route-idProducto="@producto.idProducto" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>
+                                        }
+                                        <a asp-action="DetallesProducto" asp-route-idProducto="@producto.idProducto" class="btn btn-info btn-sm"><i class="bi bi-info-circle"></i> Detalles</a>
+                                        @if (producto.stock > 0)
+                                        {
+                                            <a asp-action="ProductoCarrito" asp-controller="CarritoCompras" asp-route-idProducto="@producto.idProducto" class="btn btn-success btn-sm"><i class="bi bi-cart-plus"></i> Agregar al carrito</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" class="btn btn-success btn-sm disabled"><i class="bi bi-cart-x"></i> Agregar al carrito</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+</div>

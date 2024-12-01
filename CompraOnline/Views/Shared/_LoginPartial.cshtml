@@ -1,44 +1,36 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@* @inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager *@
-
 <ul class="navbar-nav">
-@* @if (SignInManager.IsSignedIn(User)) *@
-@if (User.Identity.IsAuthenticated)
-{
-    @* <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li> *@
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="" asp-controller="" asp-action="" title="Manage">Hola @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <a class="btn btn-success m-2" asp-area="" asp-controller="Usuarios" asp-action="CambiarContrasena" asp-route-idUsuario=@User.FindFirst("idUsuario")?.Value title="Manage">Cambiar mi contraseña</a>
-    </li>
-    <li class="nav-item">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" title="Manage">
+                <i class="bi bi-person-circle"></i> Hola @User.Identity?.Name!
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-success m-2" asp-area="" asp-controller="Usuarios" asp-action="CambiarContrasena" asp-route-idUsuario=@User.FindFirst("idUsuario")?.Value title="Change Password">
+                <i class="bi bi-key"></i> Cambiar mi contraseña
+            </a>
+        </li>
+        <li class="nav-item">
             <form class="form-inline" asp-controller="Usuarios" asp-area="" asp-action="Logout">
-            <button  type="submit" asp-area="" asp-controller="Usuarios" asp-action="Logout" class="nav-link btn btn-link text-dark btn-danger m-2">Cerrar sesión</button>
-        </form>
-    </li>
-}
-else
-{
-   @*  <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li> *@
-    <li class="nav-item">
-        <a class="btn btn-info m-2" asp-area="" asp-controller="Usuarios" asp-action="Registro">Registro</a>
-    </li>
-    <li class="nav-item">
-        <a class="btn btn-primary m-2" asp-area="" asp-controller="Usuarios" asp-action="Login">Iniciar Sesión</a>
-    </li>
-}
+                <button type="submit" class="nav-link btn btn-link text-dark btn-danger m-2">
+                    <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="btn btn-info m-2" asp-area="" asp-controller="Usuarios" asp-action="Registro" title="Register">
+                <i class="bi bi-person-plus"></i> Registro
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="btn btn-primary m-2" asp-area="" asp-controller="Usuarios" asp-action="Login" title="Login">
+                <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+            </a>
+        </li>
+    }
 </ul>

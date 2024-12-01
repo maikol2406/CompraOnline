@@ -1,79 +1,56 @@
 ﻿@model IEnumerable<CompraOnline.Models.Productos.Producto>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.idProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.nombreProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.descripcionProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.precioPromo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.idCategoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.promocion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.idProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.nombreProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.descripcionProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.precioPromo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.stock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.idCategoria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.promocion)
-            </td>
-            <td>
-                @* @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ }) *@
-                @if (item.stock > 0)
-                {
-                    @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = item.idProducto }, new { @class = "btn btn-success" })
-                }
-                else
-                {
-                    @Html.ActionLink("Agregar al carrito", "ProductoCarrito", "CarritoCompras", new { idProducto = item.idProducto }, new { @class = "btn btn-success disabled" })
-                }
-            </td>
-        </tr>
+@{
+    ViewData["Title"] = "Detalles del Pedido";
+    int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
 }
-    </tbody>
-</table>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Productos Filtrados</h1>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.nombreProducto</h5>
+                        <p class="card-text">@item.descripcionProducto</p>
+                        <p><strong>Precio:</strong> $@item.precio</p>
+                        @if (item.precioPromo.HasValue)
+                        {
+                            <p><strong>Precio Promoción:</strong> $@item.precioPromo</p>
+                        }
+                        <p><strong>Stock:</strong> @item.stock</p>
+                        <p><strong>Categoría:</strong> @item.idCategoria</p>
+                        <p><strong>Promoción:</strong> @item.promocion</p>
+
+                        <div class="d-flex justify-content-between">
+                            @if (item.stock > 0)
+                            {
+                                <a href="@Url.Action("ProductoCarrito", "CarritoCompras", new { idProducto = item.idProducto })" class="btn btn-success">
+                                    <i class="bi bi-cart-plus"></i> Agregar al carrito
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-success disabled">
+                                    <i class="bi bi-cart-plus"></i> Agregar al carrito
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (idUsuario == 1)
+    {
+        <div class="text-center mt-4">
+            <a href="@Url.Action("CrearProducto")" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Crear Nuevo Producto
+            </a>
+        </div>
+    }
+</div>

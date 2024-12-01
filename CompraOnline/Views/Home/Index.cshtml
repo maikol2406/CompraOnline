@@ -1,10 +1,101 @@
-﻿@{
+﻿@using CompraOnline.Models.Productos
+@model List<Producto>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Compra Online</h1>
-    @* <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
-    <p>Proyecto 2 Programación Avanzada en Web</p>
-    <h2>Michael Acuña Araya</h2>
+<div class="text-center py-5">
+    <h1 class="display-4 mb-3">Compra Online</h1>
+    <p class="lead">Proyecto 2 Programación Avanzada en Web</p>
+    <h2 class="text-muted">Michael Acuña Araya</h2>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="mt-4">
+            <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-primary btn-lg">
+                <i class="bi bi-cart-plus"></i> Comienza tu compra
+            </a>
+        </div>
+
+        <br/>
+
+        <div id="productosPromocionCarrusel" class="carousel slide bg-light p-3 rounded" data-bs-ride="carousel" style="max-width: 800px; margin: auto;">
+            <div class="carousel-inner">
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    if (Model[i].promocion)
+                    {
+                        <div class="carousel-item @((i == 0) ? "active" : "")">
+                            <div class="d-flex justify-content-center">
+                                <div class="card shadow" style="width: 18rem; border: none;">
+                                    <div class="card-header text-center bg-primary text-white">
+                                        <strong>@Model[i].nombreProducto</strong>
+                                    </div>
+                                    <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="@Model[i].nombreProducto" />
+                                    <div class="card-body text-center">
+                                        <p class="card-text">@Model[i].descripcionProducto</p>
+                                        <p class="card-text">
+                                            @if (Model[i].precioPromo.HasValue)
+                                            {
+                                                <span class="text-muted text-decoration-line-through">Precio: $@Model[i].precio</span>
+                                                <br />
+                                                <span class="text-danger fw-bold">Promoción: $@Model[i].precioPromo</span>
+                                            }
+                                            else
+                                            {
+                                                <span>Precio: $@Model[i].precio</span>
+                                            }
+                                        </p>
+                                        <p class="text-muted">Stock disponible: @Model[i].stock</p>
+                                        <a href="/Productos/Detalle/@Model[i].idProducto" class="btn btn-success btn-sm">Ver más</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#productosPromocionCarrusel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#productosPromocionCarrusel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+
+        <style>
+            /* Personalización de los botones de control */
+            .custom-carousel-control {
+                width: 60px; /* Más ancho */
+                height: 60px; /* Más alto */
+                position: absolute; /* Asegura que estén posicionados correctamente */
+                top: 50%; /* Centra verticalmente */
+                transform: translateY(-50%); /* Ajusta el centrado */
+                z-index: 5; /* Asegura que estén por encima del contenido */
+            }
+
+            .carousel-control-prev {
+                left: -50px; /* Espaciado del botón izquierdo */
+            }
+
+            .carousel-control-next {
+                right: -50px; /* Espaciado del botón derecho */
+            }
+
+            .carousel-control-prev-icon,
+            .carousel-control-next-icon {
+                background-color: #007bff; /* Azul */
+                border-radius: 50%; /* Redondeado */
+                padding: 15px; /* Tamaño del ícono */
+            }
+
+            .carousel-control-prev-icon:hover,
+            .carousel-control-next-icon:hover {
+                background-color: #0056b3; /* Azul oscuro al pasar el ratón */
+            }
+        </style>
+    }
 </div>
+

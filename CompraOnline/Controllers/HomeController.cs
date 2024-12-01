@@ -1,5 +1,7 @@
 using System.Diagnostics;
+using CompraOnline.Data;
 using CompraOnline.Models;
+using CompraOnline.Models.Productos;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CompraOnline.Controllers
@@ -7,15 +9,17 @@ namespace CompraOnline.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        BaseDatos db = new BaseDatos();
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            List<Producto> listaProductos = await db.obtenerProductosPromo();
+            return View(listaProductos);
         }
 
         public IActionResult Privacy()

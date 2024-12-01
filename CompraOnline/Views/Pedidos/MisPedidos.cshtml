@@ -5,69 +5,44 @@
     List<CompraOnline.Models.Usuarios.Usuario> usuarios = ViewBag.listaUsuarios;
 }
 
-<h1>MisPedidos</h1>
+<h1 class="text-center mb-4">Mis Pedidos</h1>
 
-@* <p>
-    <a asp-action="Create">Create New</a>
-</p> *@
-<table class="table">
-    <thead>
-        <tr>
-            @* <th>
-                @Html.DisplayNameFor(model => model.idPedido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.idUsuario)
-            </th> *@
-            <th>
-                Nombre del cliente
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.precioTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.estadoPedido)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-           @*  <td>
-                @Html.DisplayFor(modelItem => item.idPedido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.idUsuario)
-            </td> *@
-            <td>
-                @foreach (var item2 in usuarios)
-                {
-                    if (item.idUsuario == item2.idUsuario)
-                    {
-                        @item2.nombreCompleto
-                    }
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.precioTotal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.estadoPedido)
-            </td>
-            <td>
-                @* @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) | *@
-                @Html.ActionLink("Detalles", "DetallesPedido", new { idPedido = item.idPedido }, new {@class="btn btn-success"})
-                    @if (DateTime.TryParse(item.fechaCreacion.ToString(), out var fechaCreacion) && fechaCreacion >= ViewBag.fecha)
-                {
-                    @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-danger" })
-                }
-                else
-                {
-                        @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-danger disabled" })
-                }
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @foreach (var item2 in usuarios)
+                        {
+                            if (item.idUsuario == item2.idUsuario)
+                            {
+                                @item2.nombreCompleto
+                            }
+                        }
+                    </h5>
+                    <p class="card-text">
+                        <strong>Precio Total:</strong> @Html.DisplayFor(modelItem => item.precioTotal) <br />
+                        <strong>Estado:</strong> @Html.DisplayFor(modelItem => item.estadoPedido) <br />
+                    </p>
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            @Html.ActionLink("Detalles", "DetallesPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-success btn-sm" })
+                        </div>
+                        <div>
+                            @if (DateTime.TryParse(item.fechaCreacion.ToString(), out var fechaCreacion) && fechaCreacion >= ViewBag.fecha)
+                            {
+                                @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-danger btn-sm" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-danger btn-sm disabled" })
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
