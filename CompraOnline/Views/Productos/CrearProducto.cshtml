@@ -21,6 +21,12 @@
                 }
 
                 <section class="form-group mb-3">
+                    <label asp-for="imagen" class="form-label"></label>
+                    <input asp-for="imagen" class="form-control" placeholder="URL de la imagen" />
+                    <span asp-validation-for="imagen" class="text-danger"></span>
+                </section>
+
+                <section class="form-group mb-3">
                     <label asp-for="nombreProducto" class="form-label"></label>
                     <input asp-for="nombreProducto" class="form-control" placeholder="Nombre del producto" />
                     <span asp-validation-for="nombreProducto" class="text-danger"></span>

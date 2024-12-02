@@ -1,0 +1,10 @@
+﻿[*.cs]
+
+# IDE0290: Use primary constructor
+csharp_style_prefer_primary_constructors = true
+
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none
+
+# CA1720: Identifier contains type name
+dotnet_diagnostic.CA1720.severity = none

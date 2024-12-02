@@ -7,15 +7,15 @@
     int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
 }
 
-<div class="container mt-4">
+<section class="container mt-4">
     <h1 class="text-center mb-4">Productos por Categoría</h1>
 
     @if (idUsuario == 1)
     {
-        <div class="mb-3">
-            <a asp-action="CrearProducto" class="btn btn-primary btn-lg"><i class="bi bi-plus-circle"></i> Crear un producto</a>
-            <a asp-action="BuscarProducto" class="btn btn-success btn-lg"><i class="bi bi-search"></i> Buscar un producto</a>
-        </div>
+        <section class="mb-4 text-center">
+            <a asp-action="CrearProducto" class="btn btn-primary btn-lg me-2 mb-2 mt-2"><i class="bi bi-plus-circle"></i> Crear un producto</a>
+                <a asp-action="BuscarProducto" class="btn btn-success btn-lg mb-2 mt-2"><i class="bi bi-search"></i> Buscar un producto</a>
+        </section>
     }
 
     @foreach (var productoAgrupado in productosAgrupados)
@@ -23,63 +23,53 @@
         var categoria = listaCategorias.FirstOrDefault(c => c.idCategoria == productoAgrupado.Key);
         if (categoria != null)
         {
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h3 class="card-title">@categoria.nombreCategoria</h3>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>@Html.DisplayNameFor(model => model.imagen)</th>
-                                <th>@Html.DisplayNameFor(model => model.nombreProducto)</th>
-                                <th>@Html.DisplayNameFor(model => model.descripcionProducto)</th>
-                                <th>@Html.DisplayNameFor(model => model.precio)</th>
-                                <th>@Html.DisplayNameFor(model => model.precioPromo)</th>
-                                <th>@Html.DisplayNameFor(model => model.stock)</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var producto in productoAgrupado)
-                            {
-                                <tr>
-                                    <td>
-                                        <img src="@producto.imagen" alt="@producto.nombreProducto" class="img-fluid" style="max-width: 50px; max-height: 50px; object-fit: cover;">
-                                    </td>
-                                    <td>@Html.DisplayFor(modelItem => producto.nombreProducto)</td>
-                                    <td>@Html.DisplayFor(modelItem => producto.descripcionProducto)</td>
-                                    <td>@Html.DisplayFor(modelItem => producto.precio)</td>
-                                    @if (producto.promocion)
-                                    {
-                                        <td>@Html.DisplayFor(modelItem => producto.precioPromo)</td>
-                                    }
-                                    else
-                                    {
-                                        <td>Sin promoción</td>
-                                    }
-                                    <td>@Html.DisplayFor(modelItem => producto.stock)</td>
-                                    <td>
+            <section class="card mb-5 shadow-lg">
+                <!-- Encabezado de la tarjeta de la categoría -->
+                <section class="card-header bg-primary text-white">
+                    <h2 class="mb-0">@categoria.nombreCategoria</h2>
+                </section>
+                <!-- Cuerpo de la tarjeta de categoría -->
+                <section class="card-body">
+                    <section class="row row-cols-1 row-cols-md-3 g-4">
+                        @foreach (var producto in productoAgrupado)
+                        {
+                            <section class="col">
+                                <!-- Tarjeta de producto -->
+                                <section class="card h-100 shadow-sm">
+                                    <img src="@producto.imagen" alt="@producto.nombreProducto" class="card-img-top img-fluid" style="max-height: 200px; object-fit: cover;">
+                                    <section class="card-body">
+                                        <h5 class="card-title">@producto.nombreProducto</h5>
+                                        <p class="card-text text-muted">@producto.descripcionProducto</p>
+                                        <p class="card-text fw-bold text-success">
+                                            Precio: $@producto.precio
+                                            @if (producto.promocion)
+                                            {
+                                                <span class="text-danger ms-2">En oferta: $@producto.precioPromo</span>
+                                            }
+                                        </p>
+                                        <p class="card-text">Stock: <span class="fw-bold">@producto.stock</span></p>
+                                    </section>
+                                    <section class="card-footer d-flex justify-content-between">
+                                        <a asp-action="DetallesProducto" asp-route-idProducto="@producto.idProducto" class="btn btn-info btn-sm"><i class="bi bi-info-circle"></i> Detalles</a>
                                         @if (idUsuario == 1)
                                         {
                                             <a asp-action="EditarProducto" asp-route-idProducto="@producto.idProducto" class="btn btn-warning btn-sm"><i class="bi bi-pencil-square"></i> Editar</a>
                                         }
-                                        <a asp-action="DetallesProducto" asp-route-idProducto="@producto.idProducto" class="btn btn-info btn-sm"><i class="bi bi-info-circle"></i> Detalles</a>
                                         @if (producto.stock > 0)
                                         {
                                             <a asp-action="ProductoCarrito" asp-controller="CarritoCompras" asp-route-idProducto="@producto.idProducto" class="btn btn-success btn-sm"><i class="bi bi-cart-plus"></i> Agregar al carrito</a>
                                         }
                                         else
                                         {
-                                            <a href="#" class="btn btn-success btn-sm disabled"><i class="bi bi-cart-x"></i> Agregar al carrito</a>
+                                            <button class="btn btn-danger btn-sm disabled"><i class="bi bi-cart-x"></i> Sin stock</button>
                                         }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                                    </section>
+                                </section>
+                            </section>
+                        }
+                    </section>
+                </section>
+            </section>
         }
     }
-</div>
+</section>

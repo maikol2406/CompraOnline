@@ -296,7 +296,7 @@ namespace CompraOnline.Data
             return listaProductos;
         }
 
-        public async Task<Producto> obtenerProducto(int idProducto)
+        public virtual async Task<Producto> obtenerProducto(int idProducto)
         {
             SqlConnectionStringBuilder builder = conexion();
             Producto producto = new Producto();
@@ -438,7 +438,7 @@ namespace CompraOnline.Data
             using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
             {
                 string query = "UPDATE Productos SET nombreProducto = @NOMBREPRODUCTO, descripcionProducto = @DESCRIPCION, precio = @PRECIO, " +
-                    "precioPromo = @PRECIOPROMO, stock = @STOCK, idCategoria = @IDCATEGORIA, promocion = @PROMOCION WHERE idProducto = @IDPRODUCTO";
+                    "precioPromo = @PRECIOPROMO, stock = @STOCK, idCategoria = @IDCATEGORIA, promocion = @PROMOCION, imagen = @IMAGEN WHERE idProducto = @IDPRODUCTO";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     //cmd.CommandType = CommandType.StoredProcedure;
@@ -452,6 +452,7 @@ namespace CompraOnline.Data
                     cmd.Parameters.AddWithValue("@IDCATEGORIA", producto.idCategoria);
                     cmd.Parameters.AddWithValue("@PROMOCION", producto.promocion);
                     cmd.Parameters.AddWithValue("@IDPRODUCTO", producto.idProducto);
+                    cmd.Parameters.AddWithValue("@IMAGEN", producto.imagen);
 
                     conn.OpenAsync();
                     try
