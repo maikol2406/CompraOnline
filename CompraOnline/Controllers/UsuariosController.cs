@@ -128,6 +128,13 @@ namespace CompraOnline.Controllers
             return View(usuarios);
         }
 
+        // GET: UsuariosController/Create
+        public async Task<ActionResult> VerUsuario(int idusuario)
+        {
+            Usuario usuario = await _baseDatos.obtenerUsuario(idusuario);
+            return View(usuario);
+        }
+
         [HttpGet]
         public ActionResult CambiarContrasena(string idUsuario)
         {
@@ -148,6 +155,47 @@ namespace CompraOnline.Controllers
             }
             Logout();
             return RedirectToAction(nameof(Login));
+        }
+
+        // GET: UsuariosController/Create
+        public async Task<ActionResult> EditarUsuario(int idUsuario)
+        {
+            Usuario usaurio = await _baseDatos.obtenerUsuario(idUsuario);
+            return View(usaurio);
+        }
+
+        // POST: UsuariosController/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditarUsuario(Usuario usuario)
+        {
+            try
+            {
+                await Task.Run(() => _baseDatos.actualizarUsuario(usuario));
+                return RedirectToAction(nameof(VerUsuarios));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: UsuariosController/Create
+        public async Task<ActionResult> EliminarUsuario(int idUsuario)
+        {
+            Usuario usuario = await _baseDatos.obtenerUsuario(idUsuario);
+            try
+            {
+                _baseDatos.eliminarUsuario(usuario);
+                TempData["Success"] = "Usuario eliminado exitosamente.";
+                return RedirectToAction("VerUsuarios", "Usuarios");
+
+            }
+            catch (Exception e)
+            {
+                TempData["Error"] = "Error al eliminar el usuario. Por favor, inténtelo de nuevo.";
+                return RedirectToAction("VerUsuarios", "Usuarios");
+            }
         }
     }
 }

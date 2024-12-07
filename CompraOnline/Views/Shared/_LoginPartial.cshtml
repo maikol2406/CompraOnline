@@ -3,7 +3,7 @@
     @if (User.Identity.IsAuthenticated)
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" title="Manage">
+            <a class="nav-link text-dark" title="VerUsuario" href="@Url.Action("VerUsuario","Usuarios", new {idUsuario = @User.FindFirst("idUsuario")?.Value})">
                 <i class="bi bi-person-circle"></i> Hola @User.Identity?.Name!
             </a>
         </li>

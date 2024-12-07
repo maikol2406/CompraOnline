@@ -18,13 +18,14 @@
                         <h5 class="card-title">@item.nombreProducto</h5>
                         <p class="card-text">@item.descripcionProducto</p>
                         <p><strong>Precio:</strong> ₡@item.precio</p>
-                        @if (item.precioPromo.HasValue)
+                        @* @if (item.precioPromo.HasValue) *@
+                        @if (item.promocion)
                         {
                             <p><strong>Precio Promoción:</strong> ₡@item.precioPromo</p>
                         }
                         <p><strong>Stock:</strong> @item.stock</p>
                         <p><strong>Categoría:</strong> @item.idCategoria</p>
-                        <p><strong>Promoción:</strong> @item.promocion</p>
+                        @* <p><strong>Promoción:</strong> @item.promocion</p> *@
 
                         <div class="d-flex justify-content-between">
                             @if (item.stock > 0)

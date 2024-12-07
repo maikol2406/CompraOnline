@@ -127,11 +127,23 @@ namespace CompraOnline.Controllers
                 else
                 {
                     carrito.montoTotal = carrito.cantidad * producto.precio;
+                    foreach (var item in await db.obtenerPedidosPendientes(carrito.idUsuario))
+                    {
+                        if (item.idPedido == carrito.idPedido)
+                        {
+                            foreach (var item2 in listaCarrito)
+                            {
+                                precioTotal1 = precioTotal1 + item2.montoTotal;
+                            }
+                            precioTotal1 += carrito.montoTotal;
+                        }
+                    }
+                    int proceso2 = await db.actualizarCostoPedido(carrito.idPedido, precioTotal1);
                     await db.insertarCarritoCompras(carrito);
                 }
 
-                producto.stock -= carrito.cantidad;
-                db.actualizarCantidadProducto(carrito.idProducto, producto.stock);
+                //producto.stock -= carrito.cantidad;
+                //db.actualizarCantidadProducto(carrito.idProducto, producto.stock);
 
 
                 return RedirectToAction("VerCarrito", "CarritoCompras");
@@ -188,15 +200,15 @@ namespace CompraOnline.Controllers
 
                 int resultado = await db.eliminarProductoCarrito(carrito);
 
-                if (resultado > 0)
-                {
-                    var producto = await db.obtenerProducto(carrito.idProducto);
-                    if (producto != null)
-                    {
-                        producto.stock += carrito.cantidad;
-                        db.actualizarCantidadProducto(carrito.idProducto, producto.stock);
-                    }
-                }
+                //if (resultado > 0)
+                //{
+                //    var producto = await db.obtenerProducto(carrito.idProducto);
+                //    if (producto != null)
+                //    {
+                //        producto.stock += carrito.cantidad;
+                //        db.actualizarCantidadProducto(carrito.idProducto, producto.stock);
+                //    }
+                //}
 
                 return RedirectToAction(nameof(VerCarrito));
             }

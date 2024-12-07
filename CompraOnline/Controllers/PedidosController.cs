@@ -63,10 +63,10 @@ namespace CompraOnline.Controllers
             int idCliente = int.Parse(User.FindFirst("idUsuario")?.Value);
             var pedido = await db.obtenerPedido(idCliente);
 
-            foreach (var item in await db.obtenerCarritosCompras(pedido.idPedido))
-            {
-                pedido.precioTotal = pedido.precioTotal + item.montoTotal;
-            }
+            //foreach (var item in await db.obtenerCarritosCompras(pedido.idPedido))
+            //{
+            //    pedido.precioTotal = pedido.precioTotal + item.montoTotal;
+            //}
 
             Pago pago = new Pago();
             

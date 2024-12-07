@@ -23,15 +23,15 @@
                     </section>
 
                     <section class="form-group">
-                        <label asp-for="idPedido" class="control-label">ID Pedido</label>
-                        <input asp-for="idPedido" class="form-control" readonly />
-                        <span asp-validation-for="idPedido" class="text-danger"></span>
+                        <label asp-for="idPedido" class="control-label" hidden>ID Pedido</label>
+                        <input asp-for="idPedido" class="form-control" readonly type="hidden" />
+                        <span asp-validation-for="idPedido" class="text-danger" hidden></span>
                     </section>
 
                     <section class="form-group">
-                        <label asp-for="terminalId" class="control-label">Terminal ID</label>
-                        <input asp-for="terminalId" class="form-control" readonly />
-                        <span asp-validation-for="terminalId" class="text-danger"></span>
+                        <label asp-for="terminalId" class="control-label" hidden>Terminal ID</label>
+                        <input asp-for="terminalId" class="form-control" readonly type="hidden"/>
+                        <span asp-validation-for="terminalId" class="text-danger" hidden></span>
                     </section>
 
                     <section class="form-group">
@@ -48,13 +48,19 @@
 
                     <section class="form-group">
                         <label asp-for="totalAmount" class="control-label">Monto Total</label>
-                        <input asp-for="totalAmount" class="form-control" readonly />
+                        <section class="input-group">
+                            <span class="input-group-text">₡</span>
+                            <input asp-for="totalAmount" class="form-control" readonly />
+                        </section>
                         <span asp-validation-for="totalAmount" class="text-danger"></span>
                     </section>
 
                     <section class="form-group">
                         <label asp-for="taxAmount" class="control-label">Monto de Impuestos</label>
-                        <input asp-for="taxAmount" class="form-control" readonly />
+                        <section class="input-group">
+                            <span class="input-group-text">₡</span>
+                            <input asp-for="taxAmount" class="form-control" readonly />
+                        </section>
                         <span asp-validation-for="taxAmount" class="text-danger"></span>
                     </section>
 

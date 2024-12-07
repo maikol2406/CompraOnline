@@ -41,10 +41,14 @@
                                         <h5 class="card-title">@producto.nombreProducto</h5>
                                         <p class="card-text text-muted">@producto.descripcionProducto</p>
                                         <p class="card-text fw-bold text-success">
-                                            Precio: ₡@producto.precio.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
                                             @if (producto.promocion)
                                             {
-                                                <span class="text-danger ms-2">En oferta: ₡@producto.precioPromo.Value.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</span>
+                                                <span class="text-decoration-line-through text-muted d-block">Precio: ₡@producto.precio.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</span>
+                                                <span class="text-danger d-block">En oferta: ₡@producto.precioPromo.Value.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="d-block">Precio: ₡@producto.precio.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</span>
                                             }
                                         </p>
                                         <p class="card-text">Stock: <span class="fw-bold">@producto.stock</span></p>

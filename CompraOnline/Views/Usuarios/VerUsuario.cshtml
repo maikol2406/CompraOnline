@@ -1,0 +1,57 @@
+﻿@model CompraOnline.Models.Usuarios.Usuario
+
+<section class="container mt-5">
+    <h1 class="text-primary text-center mb-4">
+        <i class="bi bi-person-circle"></i> Detalles del Usuario
+    </h1>
+
+    <section class="card shadow-sm p-4">
+        <section class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">
+                    <i class="bi bi-person-badge"></i> @Html.DisplayNameFor(model => model.idUsuario)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.idUsuario)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    <i class="bi bi-person"></i> @Html.DisplayNameFor(model => model.username)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.username)
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    <i class="bi bi-key"></i> @Html.DisplayNameFor(model => model.password)
+                </dt>
+                <dd class="col-sm-9">
+                    ********
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    <i class="bi bi-shield-lock"></i> @Html.DisplayNameFor(model => model.confirmaPassword)
+                </dt>
+                <dd class="col-sm-9">
+                    ********
+                </dd>
+
+                <dt class="col-sm-3 fw-bold">
+                    <i class="bi bi-person-lines-fill"></i> @Html.DisplayNameFor(model => model.nombreCompleto)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.nombreCompleto)
+                </dd>
+            </dl>
+        </section>
+    </section>
+
+    <section class="d-flex justify-content-between mt-4">
+        <a href="@Url.Action("EditarUsuario", "Usuarios", new {idUsuario = Model.idUsuario})" class="btn btn-warning">
+            <i class="bi bi-pencil-square"></i> Editar
+        </a>
+        <a asp-action="VerUsuarios" class="btn btn-secondary">
+            <i class="bi bi-arrow-left-circle"></i> Volver a la lista
+        </a>
+    </section>
+</section>

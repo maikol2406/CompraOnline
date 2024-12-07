@@ -39,6 +39,31 @@
                                     <i class="bi bi-journal-check"></i> Ver mis pedidos
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Productos" asp-action="BuscarProducto">
+                                    <i class="bi bi-search"></i> Buscar un producto
+                                </a>
+                            </li>
+                            @if (User.FindFirst("idUsuario")?.Value == "1")
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="herramientasAdminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-tools"></i> Herramientas administrador
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="herramientasAdminDropdown">
+                                        <li>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Productos" asp-action="CrearProducto">
+                                                <i class="bi bi-pencil-square"></i> ADM-Crear productos
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-area="" asp-controller="Usuarios" asp-action="VerUsuarios">
+                                                <i class="bi bi-person-gear"></i> ADM-Ver usuarios
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
                         }
                     </ul>
                     <partial name="_LoginPartial" />

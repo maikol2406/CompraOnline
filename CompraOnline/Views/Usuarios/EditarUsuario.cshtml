@@ -1,0 +1,53 @@
+﻿@model CompraOnline.Models.Usuarios.Usuario
+
+<section class="container mt-5 mb-5">
+    <h1 class="text-primary text-center mb-4">
+        <i class="bi bi-person-circle"></i> Editar Usuario
+    </h1>
+    <section class="card shadow-sm p-4 d-flex justify-content-between">
+        <section class="card-body">
+            <form asp-action="EditarUsuario">
+                <section asp-validation-summary="ModelOnly" class="alert alert-danger" style="display: none;"></section>
+
+                <section class="form-group mb-3">
+                    <label asp-for="idUsuario" class="form-label fw-bold">
+                        <i class="bi bi-person-badge"></i> ID Usuario
+                    </label>
+                    <input asp-for="idUsuario" class="form-control" readonly />
+                    <span asp-validation-for="idUsuario" class="text-danger"></span>
+                </section>
+
+                <section class="form-group mb-3">
+                    <label asp-for="username" class="form-label fw-bold">
+                        <i class="bi bi-person"></i> Username
+                    </label>
+                    <input asp-for="username" class="form-control" readonly/>
+                    <span asp-validation-for="username" class="text-danger"></span>
+                </section>
+
+                <section class="form-group mb-3">
+                    <label asp-for="nombreCompleto" class="form-label fw-bold">
+                        <i class="bi bi-person-lines-fill"></i> Nombre Completo
+                    </label>
+                    <input asp-for="nombreCompleto" class="form-control" />
+                    <span asp-validation-for="nombreCompleto" class="text-danger"></span>
+                </section>
+
+                <section class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                    <a asp-action="VerUsuarios" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left-circle"></i> Regresar
+                    </a>
+                </section>
+            </form>
+        </section>
+    </section>
+</section>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -24,13 +24,13 @@
                         <p><strong>ID Usuario:</strong> @item.idUsuario</p>
                         <p><strong>Password:</strong> ********</p>
                         <section class="d-flex justify-content-between">
-                            <a asp-action="Edit" asp-route-id="@item.idUsuario" class="btn btn-warning btn-sm">
+                            <a href="@Url.Action("EditarUsuario", "Usuarios", new {idUsuario = @item.idUsuario})" class="btn btn-warning btn-sm">
                                 <i class="bi bi-pencil-square"></i> Editar
                             </a>
-                            <a asp-action="Details" asp-route-id="@item.idUsuario" class="btn btn-info btn-sm">
+                            <a href="@Url.Action("VerUsuario", "Usuarios", new {idUsuario = @item.idUsuario})" class="btn btn-info btn-sm">
                                 <i class="bi bi-eye"></i> Ver
                             </a>
-                            <a asp-action="Delete" asp-route-id="@item.idUsuario" class="btn btn-danger btn-sm">
+                            <a href="@Url.Action("EliminarUsuario", "Usuarios", new {idUsuario = @item.idUsuario})" class="btn btn-danger btn-sm">
                                 <i class="bi bi-trash-fill"></i> Eliminar
                             </a>
                         </section>
@@ -39,4 +39,17 @@
             </section>
         }
     </section>
+    @if (TempData["Success"] != null)
+    {
+        <section class="alert alert-success">
+            @TempData["Success"]
+        </section>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <section class="alert alert-danger">
+            @TempData["Error"]
+        </section>
+    }
 </section>

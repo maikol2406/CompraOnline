@@ -64,6 +64,88 @@ namespace CompraOnline.Data
             return listaUsuarios;
         }
 
+        public virtual async Task<Usuario> obtenerUsuario(int idUsuario)
+        {
+            Usuario usuario = new Usuario();
+            SqlConnectionStringBuilder builder = conexion();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                await conn.OpenAsync();
+                var query = "SELECT * FROM usuarios WHERE idUsuario = @IDUSUARIO";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            usuario = new Usuario
+                            {
+                                idUsuario = reader.GetInt32("idUsuario"),
+                                username = reader.GetString("username"),
+                                password = reader.GetString("password"),
+                                nombreCompleto = reader.GetString("nombreCompleto")
+                            };
+                        }
+                    }
+                }
+            }
+            return usuario;
+        }
+
+        public virtual async void actualizarUsuario(Usuario usuario)
+        {
+            try
+            {
+                SqlConnectionStringBuilder builder = conexion();
+                using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+                {
+                    await conn.OpenAsync();
+                    var query = "UPDATE Usuarios SET nombreCompleto = @NOMBREUSUARIO WHERE idUsuario = @IDUSUARIO";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        //cmd.Parameters.AddWithValue("@idUsuario", usuario.idUsuario);
+                        cmd.Parameters.AddWithValue("@NOMBREUSUARIO", usuario.nombreCompleto);
+                        cmd.Parameters.AddWithValue("@IDUSUARIO", usuario.idUsuario);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception("Error al guardar los datos del usuario. " + e.Message);
+            }
+        }
+
+        public virtual async void eliminarUsuario(Usuario usuario)
+        {
+            try
+            {
+                SqlConnectionStringBuilder builder = conexion();
+                using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+                {
+                    await conn.OpenAsync();
+                    var query = "DELETE Usuarios WHERE idUsuario = @IDUSUARIO";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@IDUSUARIO", usuario.idUsuario);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception("Error al guardar los datos del usuario. " + e.Message);
+            }
+        }
+
         public virtual async void agregarUsuario(Usuario usuario)
         {
             try
@@ -482,6 +564,39 @@ namespace CompraOnline.Data
             using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
             {
                 string query = "SELECT * FROM Pedidos WHERE idUsuario = @IDUSUARIO AND fechaCreacion IS NOT NULL";
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
+                    await conn.OpenAsync();
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            Pedido pedido = new Pedido();
+                            pedido.idPedido = Convert.ToInt32(reader["idPedido"].ToString());
+                            pedido.idUsuario = Convert.ToInt32(reader["idUsuario"].ToString());
+                            //pedido.cantidad = Convert.ToInt32(reader["cantidad"].ToString());
+                            pedido.precioTotal = float.Parse(reader["precioTotal"].ToString());
+                            pedido.estadoPedido = Convert.ToBoolean(reader["estadoPedido"].ToString());
+                            //pedido.fechaCreacion = Convert.ToDateTime(reader["fechaCreacion"]);
+                            pedido.fechaCreacion = reader.IsDBNull(reader.GetOrdinal("fechaCreacion")) ? (DateTime?)null : Convert.ToDateTime(reader["fechaCreacion"]);
+
+                            listaPedidos.Add(pedido);
+                        }
+                    }
+                    await conn.CloseAsync();
+                }
+            }
+            return listaPedidos;
+        }
+
+        public async Task<List<Pedido>> obtenerPedidosPendientes(int idUsuario)
+        {
+            SqlConnectionStringBuilder builder = conexion();
+            List<Pedido> listaPedidos = new List<Pedido>();
+            using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+            {
+                string query = "SELECT * FROM Pedidos WHERE idUsuario = @IDUSUARIO AND fechaCreacion IS NULL";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);
