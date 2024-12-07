@@ -5,6 +5,18 @@
     List<CompraOnline.Models.Productos.Producto> productos = ViewBag.listaProductos;
     List<CompraOnline.Models.Usuarios.Usuario> usuarios = ViewBag.listaUsuarios;
     float totalCarrito = ViewBag.totalCarrito;
+
+    // Agrupar los productos por idProducto
+    var productosAgrupados = Model
+        .GroupBy(c => c.idProducto)
+        .Select(g => new
+        {
+            idProducto = g.Key,
+            CantidadTotal = g.Sum(c => c.cantidad),
+            MontoTotal = g.Sum(c => c.montoTotal),
+            PrimerItem = g.First() // Usar el primer elemento para otros detalles del producto
+        })
+        .ToList();
 }
 
 <h1 class="text-center my-4">Ver Carrito</h1>
@@ -12,71 +24,65 @@
 @if (Model.Any())
 {
     <section>
-        <div class="d-flex justify-content-between mb-4">
+        <section class="d-flex justify-content-between mb-4">
             <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">
                 <i class="bi bi-credit-card"></i> Pagar pedido
             </a>
             <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Agregar productos
             </a>
-        </div>
+        </section>
 
-        <div class="text-end mb-4">
+        <section class="text-end mb-4">
             <p><strong>Monto total:</strong> ₡@totalCarrito.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</p>
-        </div>
+        </section>
     </section>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var item in Model)
+    <section class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var grupo in productosAgrupados)
         {
-            <div class="col">
-                <div class="card h-100">
-                    @foreach (var item2 in productos)
+            var producto = productos.FirstOrDefault(p => p.idProducto == grupo.idProducto);
+            <section class="col">
+                <section class="card h-100">
+                    @if (producto != null)
                     {
-                        if (item.idProducto == item2.idProducto)
-                        {
-                            <img src="@item2.imagen" class="card-img-top" alt="@item2.nombreProducto" style="object-fit: contain; height: 200px; width: 100%;">
-                        }
+                        <img src="@producto.imagen" class="card-img-top" alt="@producto.nombreProducto" style="object-fit: contain; height: 200px; width: 100%;">
                     }
-                    <div class="card-body">
+                    <section class="card-body">
                         <h5 class="card-title">
-                            @foreach (var item2 in usuarios)
+                            @foreach (var usuario in usuarios)
                             {
-                                if (item.idUsuario == item2.idUsuario)
+                                if (grupo.PrimerItem.idUsuario == usuario.idUsuario)
                                 {
-                                    @item2.nombreCompleto
+                                    @usuario.nombreCompleto
                                 }
                             }
                         </h5>
                         <p class="card-text">
-                            @foreach (var item2 in productos)
+                            @if (producto != null)
                             {
-                                if (item.idProducto == item2.idProducto)
-                                {
-                                    <span><strong>Producto:</strong> @item2.nombreProducto</span>
-
-                                    <br />
-                                    <span>@item2.descripcionProducto</span>
-                                }
+                                <span><strong>Producto:</strong> @producto.nombreProducto</span>
+                                <br />
+                                <span>@producto.descripcionProducto</span>
                             }
                         </p>
                         <p class="card-text">
-                            <strong>Cantidad:</strong> @Html.DisplayFor(modelItem => item.cantidad)<br />
-                            <strong>Monto Total:</strong> ₡@item.montoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
+                            <strong>Cantidad:</strong> @grupo.CantidadTotal<br />
+                            <strong>Monto Total:</strong> ₡@grupo.MontoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
                         </p>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between">
-                        <a href="@Url.Action("EditarProductoCarrito", new { idCarrito = item.idCarrito })" class="btn btn-warning btn-sm">
+                    </section>
+                    <section class="card-footer d-flex justify-content-between">
+                        <a href="@Url.Action("EditarProductoCarrito", new { idCarrito = grupo.PrimerItem.idCarrito })" class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil-square"></i> Editar
                         </a>
-                        <a href="@Url.Action("EliminarProductoCarrito", new { idCarrito = item.idCarrito })" class="btn btn-danger btn-sm">
+                        <a href="@Url.Action("EliminarProductoCarrito", new { idCarrito = grupo.PrimerItem.idCarrito })" class="btn btn-danger btn-sm">
                             <i class="bi bi-trash"></i> Eliminar
                         </a>
-                    </div>
-                </div>
-            </div>
+                    </section>
+                </section>
+            </section>
         }
-    </div>
+    </section>
 }
 else
 {

@@ -6,6 +6,17 @@
     string imagenPedido = "https://paqueteriaestrellablanca.com/wp-content/uploads/2022/01/tipos-cajas-carton-y-usos.png";
     List<CompraOnline.Models.CarritoCompras.CarritoCompra> carritoCompras = ViewBag.listaCarrito;
     List<CompraOnline.Models.Productos.Producto> listaProductos = ViewBag.listaProductos;
+
+    // Agrupar los productos por idProducto
+    var productosAgrupados = carritoCompras
+        .GroupBy(c => c.idProducto)
+        .Select(g => new
+        {
+            idProducto = g.Key,
+            CantidadTotal = g.Sum(c => c.cantidad),
+            MontoTotal = g.Sum(c => c.montoTotal)
+        })
+        .ToList();
 }
 
 <h1 class="text-center mb-4">Detalles del Pedido</h1>
@@ -15,6 +26,7 @@
 </section>
 
 <section class="container">
+    <!-- Sección de detalles del pedido -->
     <section class="row justify-content-center">
         <section class="col-md-4 mb-3">
             <section class="card">
@@ -69,7 +81,7 @@
         </section>
     </section>
 
-    @* Nueva sección para mostrar los artículos del carrito de compras *@
+    @* Sección de artículos agrupados *@
     <section class="row mt-4 mb-5">
         <section class="col-12">
             <section class="card">
@@ -77,28 +89,26 @@
                     <h5 class="mb-0">Artículos del Pedido</h5>
                 </section>
                 <section class="card-body">
-                    @if (carritoCompras != null && carritoCompras.Any())
+                    @if (productosAgrupados.Any())
                     {
                         <section class="row row-cols-1 row-cols-md-3 g-4">
-                            @foreach (var item in carritoCompras)
+                            @foreach (var grupo in productosAgrupados)
                             {
+                                var producto = listaProductos.FirstOrDefault(p => p.idProducto == grupo.idProducto);
                                 <section class="col">
                                     <section class="card h-100 shadow-sm">
                                         <section class="card-body">
-                                            @foreach (var item2 in listaProductos)
-                                            {
-                                                if (item.idProducto == item2.idProducto)
-                                                {
-                                                    <h5 class="card-title">Producto: @item2.nombreProducto @item2.descripcionProducto</h5>
-                                                }
-                                            }
+                                            <section class=" d-flex justify-content-center">
+                                                <img src="@producto?.imagen" alt="@producto?.nombreProducto" class="img-fluid rounded" style="max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 10px;">
+                                            </section>
+                                            <h5 class="card-title">Producto: @producto?.nombreProducto @producto?.descripcionProducto</h5>
                                             <p class="card-text">
-                                                <strong>Cantidad:</strong> @item.cantidad<br />
-                                                <strong>Precio Total:</strong> ₡@item.montoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
+                                                <strong>Cantidad:</strong> @grupo.CantidadTotal<br />
+                                                <strong>Precio Total:</strong> ₡@grupo.MontoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
                                             </p>
                                         </section>
                                         <section class="card-footer d-flex justify-content-center">
-                                            <a href="@Url.Action("DetallesProducto", "Productos", new { idProducto = item.idProducto } )" class="btn btn-info btn-sm"><i class="bi bi-eye"></i>Detalles</a>
+                                            <a href="@Url.Action("DetallesProducto", "Productos", new { idProducto = grupo.idProducto })" class="btn btn-info btn-sm"><i class="bi bi-eye"></i>Detalles</a>
                                         </section>
                                     </section>
                                 </section>

@@ -4,66 +4,66 @@
     ViewData["Title"] = "Registro";
 }
 
-<div class="container-fluid d-flex justify-content-center align-items-center" style="height: 90vh;">
-    <div class="card shadow-lg border-0 rounded" style="width: 100%; max-width: 400px;">
-        <div class="card-header bg-success text-white text-center">
+<section class="container-fluid d-flex justify-content-center align-items-center" style="height: 90vh;">
+    <section class="card shadow-lg border-0 rounded" style="width: 100%; max-width: 400px;">
+        <section class="card-header bg-success text-white text-center">
             <h5 class="card-title">
                 <i class="bi bi-person-plus-fill"></i> Registro de Usuario
             </h5>
-        </div>
-        <div class="card-body">
+        </section>
+        <section class="card-body">
             <form asp-action="Registro">
                 <section asp-validation-summary="ModelOnly" class="text-danger mb-3"></section>
-                <div class="form-group mb-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
+                <section class="form-group mb-3">
+                    <section class="input-group">
+                        <section class="input-group-prepend">
                             <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        </div>
+                        </section>
                         <input asp-for="username" class="form-control form-control-sm text-center" placeholder="Ingrese su usuario" />
-                    </div>
+                    </section>
                     <span asp-validation-for="username" class="text-danger"></span>
-                </div>
-                <div class="form-group mb-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
+                </section>
+                <section class="form-group mb-3">
+                    <section class="input-group">
+                        <section class="input-group-prepend">
                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        </div>
+                        </section>
                         <input asp-for="password" class="form-control form-control-sm text-center" type="password" placeholder="Ingrese su contraseña" />
-                    </div>
+                    </section>
                     <span asp-validation-for="password" class="text-danger"></span>
-                </div>
-                <div class="form-group mb-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
+                </section>
+                <section class="form-group mb-3">
+                    <section class="input-group">
+                        <section class="input-group-prepend">
                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                        </div>
+                        </section>
                         <input asp-for="confirmaPassword" class="form-control form-control-sm text-center" type="password" placeholder="Confirme su contraseña" />
-                    </div>
+                    </section>
                     <span asp-validation-for="confirmaPassword" class="text-danger"></span>
-                </div>
-                <div class="form-group mb-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
+                </section>
+                <section class="form-group mb-3">
+                    <section class="input-group">
+                        <section class="input-group-prepend">
                             <span class="input-group-text"><i class="bi bi-person-lines-fill"></i></span>
-                        </div>
+                        </section>
                         <input asp-for="nombreCompleto" class="form-control form-control-sm text-center" placeholder="Nombre completo" />
-                    </div>
+                    </section>
                     <span asp-validation-for="nombreCompleto" class="text-danger"></span>
-                </div>
-                <div class="form-group text-center">
+                </section>
+                <section class="form-group text-center">
                     <button type="submit" class="btn btn-success btn-lg">
                         <i class="bi bi-person-check-fill"></i> Registrar
                     </button>
-                </div>
+                </section>
             </form>
-        </div>
-        <div class="card-footer text-center">
+        </section>
+        <section class="card-footer text-center">
             <a asp-action="Index" asp-controller="Home" class="btn btn-danger btn-lg">
                 <i class="bi bi-arrow-left-circle"></i> Volver al inicio
             </a>
-        </div>
-    </div>
-</div>
+        </section>
+    </section>
+</section>
 
 @section Scripts {
     @{

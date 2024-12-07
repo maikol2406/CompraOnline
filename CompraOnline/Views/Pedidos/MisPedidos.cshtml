@@ -7,12 +7,12 @@
 
 <h1 class="text-center mb-4">Mis Pedidos</h1>
 
-<div class="row">
+<section class="row">
     @foreach (var item in Model)
     {
-        <div class="col-md-4 mb-4">
-            <div class="card">
-                <div class="card-body">
+        <section class="col-md-4 mb-4">
+            <section class="card">
+                <section class="card-body">
                     <h5 class="card-title">
                         @foreach (var item2 in usuarios)
                         {
@@ -27,11 +27,11 @@
                         <strong>Estado:</strong> @Html.DisplayFor(modelItem => item.estadoPedido) <br />
                         <strong>Fecha:</strong> @Html.DisplayFor(modelItem => item.fechaCreacion) <br />
                     </p>
-                    <div class="d-flex justify-content-between">
-                        <div>
+                    <section class="d-flex justify-content-between">
+                        <section>
                             @Html.ActionLink("Detalles", "DetallesPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-success btn-sm" })
-                        </div>
-                        <div>
+                        </section>
+                        <section>
                             @if (DateTime.TryParse(item.fechaCreacion.ToString(), out var fechaCreacion) && fechaCreacion >= ViewBag.fecha)
                             {
                                 @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-danger btn-sm" })
@@ -40,10 +40,10 @@
                             {
                                 @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.idPedido }, new { @class = "btn btn-danger btn-sm disabled" })
                             }
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+        </section>
     }
-</div>
+</section>

@@ -7,13 +7,13 @@
 
 <h1 class="text-center my-4">Producto Carrito</h1>
 
-<div class="container mb-5">
+<section class="container mb-5">
     <h4 class="text-secondary">Detalles del Carrito</h4>
     <hr />
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
+    <section class="row justify-content-center">
+        <section class="col-md-6 col-lg-4">
             <form asp-action="ProductoCarrito">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                <section asp-validation-summary="ModelOnly" class="text-danger mb-3"></section>
 
                 <input asp-for="idCarrito" class="form-control d-none" />
                 <input asp-for="idUsuario" class="form-control d-none" />
@@ -24,44 +24,44 @@
                     <img src="@ViewBag.imagen" alt="@ViewBag.producto" class="img-fluid rounded" style="max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 10px;">
                 </section>
 
-                <div class="form-group mb-3">
+                <section class="form-group mb-3">
                     <label class="form-label">Nombre del producto</label>
                     <input value="@ViewBag.producto" class="form-control" readonly />
-                </div>
+                </section>
 
-                <div class="form-group mb-3">
+                <section class="form-group mb-3">
                     <label class="form-label" for="cantidadInput">Cantidad</label>
                     <input asp-for="cantidad" id="cantidadInput" class="form-control" value="1" />
                     <span asp-validation-for="cantidad" class="text-danger"></span>
-                </div>
+                </section>
 
-                <div class="form-group mb-3">
+                <section class="form-group mb-3">
                     <label class="form-label" for="montoTotalInput">Monto Total</label>
                     @* <input asp-for="montoTotal" id="montoTotalInput" class="form-control" readonly value="0.00" /> *@
-                    <div class="input-group">
+                    <section class="input-group">
                         <span class="input-group-text">₡</span>
                         <input asp-for="montoTotal" id="montoTotalInput" class="form-control" readonly value="0.00" />
-                    </div>
+                    </section>
                     <span asp-validation-for="montoTotal" class="text-danger"></span>
-                </div>
+                </section>
 
                 <input type="hidden" id="precioProducto" value="@precio" />
 
-                <div class="form-group text-center">
+                <section class="form-group text-center">
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-cart-plus"></i> Agregar producto
                     </button>
-                </div>
+                </section>
             </form>
-        </div>
-    </div>
+        </section>
+    </section>
 
-    <div class="text-center mt-3">
+    <section class="text-center mt-3">
         <a asp-action="productosXCategoria" asp-controller="Productos" class="btn btn-danger">
             <i class="bi bi-arrow-left-circle"></i> Regresar a la lista de productos
         </a>
-    </div>
-</div>
+    </section>
+</section>
 
 @section Scripts {
     <script>

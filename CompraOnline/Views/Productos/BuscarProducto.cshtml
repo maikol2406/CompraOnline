@@ -9,7 +9,7 @@
 <form id="buscarProductos" method="post" asp-action="ObtenerProductosFiltro">
     @Html.AntiForgeryToken()
 
-    <div class="card p-4 shadow-sm">
+    <section class="card p-4 shadow-sm">
         <section class="form-group">
             <label for="nombreProducto">Seleccione el nombre del producto:</label>
             <select name="nombreProducto" class="form-select" id="productosDropdown">
@@ -21,10 +21,10 @@
             </select>
         </section>
 
-        <div class="d-flex justify-content-center mt-3">
+        <section class="d-flex justify-content-center mt-3">
             <button type="submit" class="btn btn-primary w-50">Buscar</button>
-        </div>
-    </div>
+        </section>
+    </section>
 </form>
 
 <section id="resultadosBusqueda" class="mt-4">

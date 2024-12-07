@@ -151,7 +151,7 @@ namespace CompraOnline.Controllers
         }
 
         // GET: CarritoComprasController/Delete/5
-        public async Task<ActionResult> EliminarProductoCarrito(int idCarrito)
+        public async Task<ActionResult> EliminarProductoCarrito(int idCarrito) //usar el idpedido y el idproducto para borrar todos los carritos del pedido de ese producto(PENDIENTE DE HACER)
         {
             CarritoCompra carrito = await db.obtenerProductoCarrito(idCarrito);
             int i = await db.eliminarProductoCarrito(carrito);

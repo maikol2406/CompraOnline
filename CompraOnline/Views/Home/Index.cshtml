@@ -4,35 +4,35 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center py-5">
+<section class="text-center py-5">
     <h1 class="display-4 mb-3">Compra Online</h1>
     <p class="lead">Proyecto 2 Programación Avanzada en Web</p>
     <h2 class="text-muted">Michael Acuña Araya</h2>
 
     @if (User.Identity.IsAuthenticated)
     {
-        <div class="mt-4">
+        <section class="mt-4">
             <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-primary btn-lg">
                 <i class="bi bi-cart-plus"></i> Comienza tu compra
             </a>
-        </div>
+        </section>
 
         <br />
 
-        <div id="productosPromocionCarrusel" class="carousel slide bg-light p-3 rounded" data-bs-ride="carousel" style="max-width: 800px; margin: auto;">
-            <div class="carousel-inner">
+        <section id="productosPromocionCarrusel" class="carousel slide bg-light p-3 rounded" data-bs-ride="carousel" style="max-width: 800px; margin: auto;">
+            <section class="carousel-inner">
                 @for (int i = 0; i < Model.Count; i++)
                 {
                     if (Model[i].promocion)
                     {
-                        <div class="carousel-item @((i == 0) ? "active" : "")">
-                            <div class="d-flex justify-content-center">
-                                <div class="card shadow" style="width: 18rem; border: none;">
-                                    <div class="card-header text-center bg-primary text-white">
+                        <section class="carousel-item @((i == 0) ? "active" : "")">
+                            <section class="d-flex justify-content-center">
+                                <section class="card shadow" style="width: 18rem; border: none;">
+                                    <section class="card-header text-center bg-primary text-white">
                                         <strong>@Model[i].nombreProducto</strong>
-                                    </div>
+                                    </section>
                                     <img src="@Model[i].imagen" class="card-img-top img-fluid" alt="@Model[i].nombreProducto" style="height: 200px; object-fit: contain;">
-                                    <div class="card-body text-center">
+                                    <section class="card-body text-center">
                                         <p class="card-text">@Model[i].descripcionProducto</p>
                                         <p class="card-text">
                                             @if (Model[i].precioPromo.HasValue)
@@ -48,13 +48,13 @@
                                         </p>
                                         <p class="text-muted">Stock disponible: @Model[i].stock</p>
                                         <a href="@Url.Action("DetallesProducto", "Productos", new { idProducto = Model[i].idProducto })" class="btn btn-success btn-sm">Ver detalles</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    </section>
+                                </section>
+                            </section>
+                        </section>
                     }
                 }
-            </div>
+            </section>
             <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#productosPromocionCarrusel" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Anterior</span>
@@ -63,9 +63,9 @@
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Siguiente</span>
             </button>
-        </div>
+        </section>
     }
-</div>
+</section>
 
         <style>
             .custom-carousel-control {
