@@ -17,7 +17,7 @@
             </a>
         </div>
 
-        <br/>
+        <br />
 
         <div id="productosPromocionCarrusel" class="carousel slide bg-light p-3 rounded" data-bs-ride="carousel" style="max-width: 800px; margin: auto;">
             <div class="carousel-inner">
@@ -31,23 +31,22 @@
                                     <div class="card-header text-center bg-primary text-white">
                                         <strong>@Model[i].nombreProducto</strong>
                                     </div>
-                                    <img src="@Model[i].imagen" class="card-img-top img-fluid" alt="@Model[i].nombreProducto" style="height: 200px; object-fit: cover;">
+                                    <img src="@Model[i].imagen" class="card-img-top img-fluid" alt="@Model[i].nombreProducto" style="height: 200px; object-fit: contain;">
                                     <div class="card-body text-center">
                                         <p class="card-text">@Model[i].descripcionProducto</p>
                                         <p class="card-text">
                                             @if (Model[i].precioPromo.HasValue)
                                             {
-                                                <span class="text-muted text-decoration-line-through">Precio: $@Model[i].precio</span>
+                                                <span class="text-muted text-decoration-line-through">Precio: ₡@Model[i].precio.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR")))</span>
                                                 <br />
-                                                <span class="text-danger fw-bold">Promoción: $@Model[i].precioPromo</span>
+                                                <span class="text-danger fw-bold">Promoción: ₡@Model[i].precioPromo.Value.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</span>
                                             }
                                             else
                                             {
-                                                <span>Precio: $@Model[i].precio</span>
+                                                <span>Precio: ₡@Model[i].precio.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</span>
                                             }
                                         </p>
                                         <p class="text-muted">Stock disponible: @Model[i].stock</p>
-                                        @* <a href="/Productos/DetallesProducto/@Model[i].idProducto" class="btn btn-success btn-sm">Ver más</a> *@
                                         <a href="@Url.Action("DetallesProducto", "Productos", new { idProducto = Model[i].idProducto })" class="btn btn-success btn-sm">Ver detalles</a>
                                     </div>
                                 </div>
@@ -65,9 +64,10 @@
                 <span class="visually-hidden">Siguiente</span>
             </button>
         </div>
+    }
+</div>
 
         <style>
-            /* Personalización de los botones de control */
             .custom-carousel-control {
                 width: 60px; /* Más ancho */
                 height: 60px; /* Más alto */
@@ -98,5 +98,4 @@
             }
         </style>
     }
-</div>
 

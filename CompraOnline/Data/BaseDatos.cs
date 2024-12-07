@@ -481,7 +481,7 @@ namespace CompraOnline.Data
             List<Pedido> listaPedidos = new List<Pedido>();
             using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
             {
-                string query = "SELECT * FROM Pedidos WHERE idUsuario = @IDUSUARIO";
+                string query = "SELECT * FROM Pedidos WHERE idUsuario = @IDUSUARIO AND fechaCreacion IS NOT NULL";
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@IDUSUARIO", idUsuario);

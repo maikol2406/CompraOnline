@@ -22,68 +22,61 @@
         </div>
 
         <div class="text-end mb-4">
-            <p><strong>Monto total:</strong> @totalCarrito</p>
+            <p><strong>Monto total:</strong> ₡@totalCarrito.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</p>
         </div>
     </section>
 
-    <hr />
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Imagen</th>
-                <th>Nombre del cliente</th>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Monto Total</th>
-                <th>Opciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @foreach (var item2 in productos)
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @foreach (var item2 in productos)
+                    {
+                        if (item.idProducto == item2.idProducto)
                         {
-                            if (item.idProducto == item2.idProducto)
-                            {
-                                <img src="@item2.imagen" alt="@item2.nombreProducto" class="img-fluid" style="max-width: 50px; max-height: 50px; object-fit: cover;">
-                            }
+                            <img src="@item2.imagen" class="card-img-top" alt="@item2.nombreProducto" style="object-fit: contain; height: 200px; width: 100%;">
                         }
-                       
-                    </td>
-                    <td>
-                        @foreach (var item2 in usuarios)
-                        {
-                            if (item.idUsuario == item2.idUsuario)
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            @foreach (var item2 in usuarios)
                             {
-                                @item2.nombreCompleto
+                                if (item.idUsuario == item2.idUsuario)
+                                {
+                                    @item2.nombreCompleto
+                                }
                             }
-                        }
-                    </td>
-                    <td>
-                        @foreach (var item2 in productos)
-                        {
-                            if (item.idProducto == item2.idProducto)
+                        </h5>
+                        <p class="card-text">
+                            @foreach (var item2 in productos)
                             {
-                                @($"{item2.nombreProducto} - {item2.descripcionProducto}")
+                                if (item.idProducto == item2.idProducto)
+                                {
+                                    <span><strong>Producto:</strong> @item2.nombreProducto</span>
+
+                                    <br />
+                                    <span>@item2.descripcionProducto</span>
+                                }
                             }
-                        }
-                    </td>
-                    <td>@Html.DisplayFor(modelItem => item.cantidad)</td>
-                    <td>@Html.DisplayFor(modelItem => item.montoTotal)</td>
-                    <td>
+                        </p>
+                        <p class="card-text">
+                            <strong>Cantidad:</strong> @Html.DisplayFor(modelItem => item.cantidad)<br />
+                            <strong>Monto Total:</strong> ₡@item.montoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
                         <a href="@Url.Action("EditarProductoCarrito", new { idCarrito = item.idCarrito })" class="btn btn-warning btn-sm">
                             <i class="bi bi-pencil-square"></i> Editar
                         </a>
                         <a href="@Url.Action("EliminarProductoCarrito", new { idCarrito = item.idCarrito })" class="btn btn-danger btn-sm">
                             <i class="bi bi-trash"></i> Eliminar
                         </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }
 else
 {

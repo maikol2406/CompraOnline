@@ -35,7 +35,7 @@
                             @Html.DisplayNameFor(model => model.precio)
                         </section>
                         <section class="card-body">
-                            @Html.DisplayFor(model => model.precio)
+                            ₡@Model.precio.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
                         </section>
                     </section>
                 </section>
@@ -49,7 +49,11 @@
                             @Html.DisplayNameFor(model => model.precioPromo)
                         </section>
                         <section class="card-body">
-                            @Html.DisplayFor(model => model.precioPromo)
+                            @if (Model.precioPromo.HasValue)
+                            {
+                                @Html.Raw($"&#8353;{Model.precioPromo.Value.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))}")
+                            }
+                           @*  ₡@Html.DisplayFor(model => model.precioPromo) *@
                         </section>
                     </section>
                 </section>

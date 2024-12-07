@@ -17,10 +17,10 @@
                         <img src="@item.imagen" alt="@item.nombreProducto" class="card-img-top img-fluid" style="max-height: 200px; object-fit: contain;">
                         <h5 class="card-title">@item.nombreProducto</h5>
                         <p class="card-text">@item.descripcionProducto</p>
-                        <p><strong>Precio:</strong> $@item.precio</p>
+                        <p><strong>Precio:</strong> ₡@item.precio</p>
                         @if (item.precioPromo.HasValue)
                         {
-                            <p><strong>Precio Promoción:</strong> $@item.precioPromo</p>
+                            <p><strong>Precio Promoción:</strong> ₡@item.precioPromo</p>
                         }
                         <p><strong>Stock:</strong> @item.stock</p>
                         <p><strong>Categoría:</strong> @item.idCategoria</p>

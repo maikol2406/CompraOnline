@@ -1,5 +1,7 @@
 ﻿using CompraOnline.Data;
+using CompraOnline.Models.CarritoCompras;
 using CompraOnline.Models.Pedidos;
+using CompraOnline.Models.Productos;
 using CompraOnline.Models.Usuarios;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -225,6 +227,12 @@ namespace CompraOnline.Controllers
             int idUsuario = int.Parse(User.FindFirst("idUsuario")?.Value);
             pedido = await db.obtenerPedidoXId(idPedido, idUsuario);
             ViewBag.listaUsuarios = listaUsuarios;
+            List<CarritoCompra> listaCarrito = new List<CarritoCompra>();
+            listaCarrito = await db.obtenerCarritosCompras(idPedido);
+            ViewBag.listaCarrito = listaCarrito;
+            List<Producto> listaProductos = new List<Producto>();
+            listaProductos = await db.obtenerProductos();
+            ViewBag.listaProductos = listaProductos;
             return View(pedido);
         }
 

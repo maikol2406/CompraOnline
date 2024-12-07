@@ -14,7 +14,7 @@
     {
         <section class="mb-4 text-center">
             <a asp-action="CrearProducto" class="btn btn-primary btn-lg me-2 mb-2 mt-2"><i class="bi bi-plus-circle"></i> Crear un producto</a>
-                <a asp-action="BuscarProducto" class="btn btn-success btn-lg mb-2 mt-2"><i class="bi bi-search"></i> Buscar un producto</a>
+            <a asp-action="BuscarProducto" class="btn btn-success btn-lg mb-2 mt-2"><i class="bi bi-search"></i> Buscar un producto</a>
         </section>
     }
 
@@ -36,15 +36,15 @@
                             <section class="col">
                                 <!-- Tarjeta de producto -->
                                 <section class="card h-100 shadow-sm">
-                                    <img src="@producto.imagen" alt="@producto.nombreProducto" class="card-img-top img-fluid" style="max-height: 200px; object-fit: cover;">
+                                    <img src="@producto.imagen" alt="@producto.nombreProducto" class="card-img-top img-fluid" style="max-height: 200px; object-fit: contain; width: 100%;">
                                     <section class="card-body">
                                         <h5 class="card-title">@producto.nombreProducto</h5>
                                         <p class="card-text text-muted">@producto.descripcionProducto</p>
                                         <p class="card-text fw-bold text-success">
-                                            Precio: $@producto.precio
+                                            Precio: ₡@producto.precio.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
                                             @if (producto.promocion)
                                             {
-                                                <span class="text-danger ms-2">En oferta: $@producto.precioPromo</span>
+                                                <span class="text-danger ms-2">En oferta: ₡@producto.precioPromo.Value.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</span>
                                             }
                                         </p>
                                         <p class="card-text">Stock: <span class="fw-bold">@producto.stock</span></p>

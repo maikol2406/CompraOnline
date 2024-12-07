@@ -4,6 +4,8 @@
     ViewData["Title"] = "Detalles del Pedido";
     List<CompraOnline.Models.Usuarios.Usuario> usuarios = ViewBag.listaUsuarios;
     string imagenPedido = "https://paqueteriaestrellablanca.com/wp-content/uploads/2022/01/tipos-cajas-carton-y-usos.png";
+    List<CompraOnline.Models.CarritoCompras.CarritoCompra> carritoCompras = ViewBag.listaCarrito;
+    List<CompraOnline.Models.Productos.Producto> listaProductos = ViewBag.listaProductos;
 }
 
 <h1 class="text-center mb-4">Detalles del Pedido</h1>
@@ -12,11 +14,11 @@
     <img src="@imagenPedido" alt="ImagenCajasEnvio" class="img-fluid rounded" style="max-height: 300px; object-fit: contain; border: 1px solid #ddd; padding: 10px;">
 </section>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
+<section class="container">
+    <section class="row justify-content-center">
+        <section class="col-md-4 mb-3">
+            <section class="card">
+                <section class="card-body">
                     <h5 class="card-title">Nombre del Usuario</h5>
                     <p class="card-text">
                         @foreach (var item2 in usuarios)
@@ -27,44 +29,88 @@
                             }
                         }
                     </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
+                </section>
+            </section>
+        </section>
+        <section class="col-md-4 mb-3">
+            <section class="card">
+                <section class="card-body">
                     <h5 class="card-title">Precio Total</h5>
-                    <p class="card-text">@Html.DisplayFor(model => model.precioTotal)</p>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <p class="card-text">₡@Model.precioTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</p>
+                </section>
+            </section>
+        </section>
+    </section>
 
-    <div class="row justify-content-center">
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
+    <section class="row justify-content-center">
+        <section class="col-md-4 mb-3">
+            <section class="card">
+                <section class="card-body">
                     <h5 class="card-title">Estado del Pedido</h5>
                     <p class="card-text">@Html.DisplayFor(model => model.estadoPedido)</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-3">
-            <div class="card">
-                <div class="card-body">
+                </section>
+            </section>
+        </section>
+        <section class="col-md-4 mb-3">
+            <section class="card">
+                <section class="card-body">
                     <h5 class="card-title">Fecha de Creación</h5>
                     <p class="card-text">@Html.DisplayFor(model => model.fechaCreacion)</p>
-                </div>
-            </div>
-        </div>
-    </div>
+                </section>
+            </section>
+        </section>
+    </section>
 
-    <div class="row justify-content-center mt-3 mb-5">
-        <div class="col-12 text-center">
+    <section class="row justify-content-center mt-3 mb-5">
+        <section class="col-12 text-center">
             <a asp-action="MisPedidos" class="btn btn-danger">
                 <i class="bi bi-arrow-left-circle"></i> Regresar a la lista de pedidos
             </a>
-        </div>
-    </div>
-</div>
+        </section>
+    </section>
 
+    @* Nueva sección para mostrar los artículos del carrito de compras *@
+    <section class="row mt-4 mb-5">
+        <section class="col-12">
+            <section class="card">
+                <section class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Artículos del Pedido</h5>
+                </section>
+                <section class="card-body">
+                    @if (carritoCompras != null && carritoCompras.Any())
+                    {
+                        <section class="row row-cols-1 row-cols-md-3 g-4">
+                            @foreach (var item in carritoCompras)
+                            {
+                                <section class="col">
+                                    <section class="card h-100 shadow-sm">
+                                        <section class="card-body">
+                                            @foreach (var item2 in listaProductos)
+                                            {
+                                                if (item.idProducto == item2.idProducto)
+                                                {
+                                                    <h5 class="card-title">Producto: @item2.nombreProducto @item2.descripcionProducto</h5>
+                                                }
+                                            }
+                                            <p class="card-text">
+                                                <strong>Cantidad:</strong> @item.cantidad<br />
+                                                <strong>Precio Total:</strong> ₡@item.montoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
+                                            </p>
+                                        </section>
+                                        <section class="card-footer d-flex justify-content-center">
+                                            <a href="@Url.Action("DetallesProducto", "Productos", new { idProducto = item.idProducto } )" class="btn btn-info btn-sm"><i class="bi bi-eye"></i>Detalles</a>
+                                        </section>
+                                    </section>
+                                </section>
+                            }
+                        </section>
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted">No hay artículos en este pedido.</p>
+                    }
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
