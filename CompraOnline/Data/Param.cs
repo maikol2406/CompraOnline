@@ -5,9 +5,9 @@
         public Parametros parametrosDB()
         {
             Parametros parametro = new Parametros();
-            parametro.DataSource = "mate.superbaterias.com";
-            parametro.UserID = "sa";
-            parametro.Password = "5up3r\\B@t3r145";
+            parametro.DataSource = "tcp:maikolacuna.database.windows.net,1433";
+            parametro.UserID = "maikol2406";
+            parametro.Password = "$Andres00*$";
             parametro.InitialCatalog = "CompraOnline";
 
             return parametro;
