@@ -78,43 +78,68 @@ namespace CompraOnline.Controllers
         {
             try
             {
-                foreach (var item in await db.obtenerProductos())
+                var listaProductos = await db.obtenerProductos();
+                var listaCarrito = await db.obtenerCarritosCompras(carrito.idPedido);
+                float precioTotal1 = 0;
+
+                var producto = listaProductos.FirstOrDefault(p => p.idProducto == carrito.idProducto);
+                if (producto == null)
                 {
-                    if (item.idProducto == carrito.idProducto && carrito.cantidad > item.stock)
+                    ModelState.AddModelError("", "El producto no existe.");
+                    return View(carrito);
+                }
+
+                if (carrito.cantidad > producto.stock)
+                {
+                    ModelState.AddModelError("cantidad", $"La cantidad solicitada ({carrito.cantidad}) excede el stock disponible ({producto.stock}).");
+                    ViewBag.productoPrecio = producto.precio;
+                    ViewBag.producto = producto.nombreProducto + " - " + producto.descripcionProducto;
+                    ViewBag.imagen = producto.imagen;
+                    return View(carrito);
+                }
+
+                var itemEnCarrito = listaCarrito.FirstOrDefault(c => c.idProducto == carrito.idProducto);
+                if (itemEnCarrito != null && (itemEnCarrito.cantidad + carrito.cantidad) > producto.stock)
+                {
+                    ModelState.AddModelError("cantidad", $"La cantidad total ({itemEnCarrito.cantidad + carrito.cantidad}) excede el stock disponible ({producto.stock}).");
+                    ViewBag.productoPrecio = producto.precio;
+                    ViewBag.producto = producto.nombreProducto + " - " + producto.descripcionProducto;
+                    ViewBag.imagen = producto.imagen;
+                    return View(carrito);
+                }
+
+                if (itemEnCarrito != null)
+                {
+
+                    int proceso = await db.insertarCarritoCompras(carrito);
+                    foreach (var item in await db.obtenerPedidos(carrito.idUsuario))
                     {
-                        ModelState.AddModelError("cantidad", $"La cantidad solicitada ({carrito.cantidad}) excede el stock disponible ({item.stock}).");
-                        ViewBag.productoPrecio = item.precio;
-                        return View(carrito);
-                    }
-                    else
-                    {
-                        if (item.idProducto == carrito.idPedido)
+                        if (item.idPedido == carrito.idPedido)
                         {
-                            ViewBag.stock = item.stock;
+                            foreach (var item2 in listaCarrito)
+                            {
+                                precioTotal1 = precioTotal1 + item2.montoTotal;
+                            }
                         }
                     }
+                    int proceso2 = await db.actualizarCostoPedido(carrito.idPedido, precioTotal1);
                 }
-                
-                float precioTotal = 0;
-                int proceso = await db.insertarCarritoCompras(carrito);
-                foreach (var item in await db.obtenerPedidos(carrito.idUsuario))
+                else
                 {
-                    if (item.idPedido == carrito.idPedido)
-                    {
-                        //CREAR UN METODO EN BASE DE DATOS PARA TRAER EL CARRITO Y LEER EL COSTO DE CADA ARTICULO CON EL ID DE PEDIDO Y PASARLO A PRECIOTOTAL.
-                        foreach (var item2 in await db.obtenerCarritosCompras(item.idPedido))
-                        {
-                            precioTotal = precioTotal + item2.montoTotal;
-                        }
-                        //precioTotal = item.precioTotal + precioTotal;
-                    }
+                    carrito.montoTotal = carrito.cantidad * producto.precio;
+                    await db.insertarCarritoCompras(carrito);
                 }
-                int proceso2 = await db.actualizarCostoPedido(carrito.idPedido, precioTotal);
+
+                producto.stock -= carrito.cantidad;
+                db.actualizarCantidadProducto(carrito.idProducto, producto.stock);
+
+
                 return RedirectToAction("VerCarrito", "CarritoCompras");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError("", "Ocurrió un error al procesar la solicitud. Inténtelo nuevamente.");
+                return View(carrito);
             }
         }
 
@@ -151,11 +176,36 @@ namespace CompraOnline.Controllers
         }
 
         // GET: CarritoComprasController/Delete/5
-        public async Task<ActionResult> EliminarProductoCarrito(int idCarrito) //usar el idpedido y el idproducto para borrar todos los carritos del pedido de ese producto(PENDIENTE DE HACER)
+        public async Task<ActionResult> EliminarProductoCarrito(int idCarrito)
         {
-            CarritoCompra carrito = await db.obtenerProductoCarrito(idCarrito);
-            int i = await db.eliminarProductoCarrito(carrito);
-            return RedirectToAction(nameof(VerCarrito));
+            try
+            {
+                CarritoCompra carrito = await db.obtenerProductoCarrito(idCarrito);
+                if (carrito == null)
+                {
+                    return NotFound();
+                }
+
+                int resultado = await db.eliminarProductoCarrito(carrito);
+
+                if (resultado > 0)
+                {
+                    var producto = await db.obtenerProducto(carrito.idProducto);
+                    if (producto != null)
+                    {
+                        producto.stock += carrito.cantidad;
+                        db.actualizarCantidadProducto(carrito.idProducto, producto.stock);
+                    }
+                }
+
+                return RedirectToAction(nameof(VerCarrito));
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores
+                ModelState.AddModelError("", "Ocurrió un error al eliminar el producto del carrito. Inténtelo nuevamente.");
+                return RedirectToAction(nameof(VerCarrito));
+            }
         }
 
     }

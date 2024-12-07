@@ -855,7 +855,7 @@ namespace CompraOnline.Data
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
 
-                    cmd.Parameters.AddWithValue("@IDCARRITO", carrito.idCarrito);
+                    cmd.Parameters.AddWithValue("@IDPRODUCTO", carrito.idProducto);
                     cmd.Parameters.AddWithValue("@IDPEDIDO", carrito.idPedido);
                     cmd.Parameters.AddWithValue("@IDUSUARIO", carrito.idUsuario);
 

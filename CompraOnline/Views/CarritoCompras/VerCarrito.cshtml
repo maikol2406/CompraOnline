@@ -19,79 +19,82 @@
         .ToList();
 }
 
-<h1 class="text-center my-4">Ver Carrito</h1>
+<section class="mb-5">
 
-@if (Model.Any())
-{
-    <section>
-        <section class="d-flex justify-content-between mb-4">
-            <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">
-                <i class="bi bi-credit-card"></i> Pagar pedido
-            </a>
+    <h1 class="text-center my-4">Ver Carrito</h1>
+
+    @if (Model.Any())
+    {
+        <section>
+            <section class="d-flex justify-content-between mb-4">
+                <a href="@Url.Action("PagarPedido", "Pedidos", new { idPedido = Model.First().idPedido })" class="btn btn-primary">
+                    <i class="bi bi-credit-card"></i> Pagar pedido
+                </a>
+                <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Agregar productos
+                </a>
+            </section>
+
+            <section class="text-end mb-4">
+                <p><strong>Monto total:</strong> ₡@totalCarrito.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</p>
+            </section>
+        </section>
+
+        <section class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
+            @foreach (var grupo in productosAgrupados)
+            {
+                var producto = productos.FirstOrDefault(p => p.idProducto == grupo.idProducto);
+                <section class="col">
+                    <section class="card h-100">
+                        @if (producto != null)
+                        {
+                            <img src="@producto.imagen" class="card-img-top" alt="@producto.nombreProducto" style="object-fit: contain; height: 200px; width: 100%;">
+                        }
+                        <section class="card-body">
+                            <h5 class="card-title">
+                                @foreach (var usuario in usuarios)
+                                {
+                                    if (grupo.PrimerItem.idUsuario == usuario.idUsuario)
+                                    {
+                                        @usuario.nombreCompleto
+                                    }
+                                }
+                            </h5>
+                            <p class="card-text">
+                                @if (producto != null)
+                                {
+                                    <span><strong>Producto:</strong> @producto.nombreProducto</span>
+                                    <br />
+                                    <span>@producto.descripcionProducto</span>
+                                }
+                            </p>
+                            <p class="card-text">
+                                <strong>Cantidad:</strong> @grupo.CantidadTotal<br />
+                                <strong>Monto Total:</strong> ₡@grupo.MontoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
+                            </p>
+                        </section>
+                        <section class="card-footer d-flex justify-content-between">
+                            <a href="@Url.Action("EditarProductoCarrito", new { idCarrito = grupo.PrimerItem.idCarrito })" class="btn btn-warning btn-sm">
+                                <i class="bi bi-pencil-square"></i> Editar
+                            </a>
+                            <a href="@Url.Action("EliminarProductoCarrito", new { idCarrito = grupo.PrimerItem.idCarrito })" class="btn btn-danger btn-sm">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        </section>
+                    </section>
+                </section>
+            }
+        </section>
+    }
+    else
+    {
+        <section>
+            <h1 class="text-center">No tienes artículos en el carrito.</h1>
+        </section>
+        <section class="text-center">
             <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Agregar productos
             </a>
         </section>
-
-        <section class="text-end mb-4">
-            <p><strong>Monto total:</strong> ₡@totalCarrito.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))</p>
-        </section>
-    </section>
-
-    <section class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @foreach (var grupo in productosAgrupados)
-        {
-            var producto = productos.FirstOrDefault(p => p.idProducto == grupo.idProducto);
-            <section class="col">
-                <section class="card h-100">
-                    @if (producto != null)
-                    {
-                        <img src="@producto.imagen" class="card-img-top" alt="@producto.nombreProducto" style="object-fit: contain; height: 200px; width: 100%;">
-                    }
-                    <section class="card-body">
-                        <h5 class="card-title">
-                            @foreach (var usuario in usuarios)
-                            {
-                                if (grupo.PrimerItem.idUsuario == usuario.idUsuario)
-                                {
-                                    @usuario.nombreCompleto
-                                }
-                            }
-                        </h5>
-                        <p class="card-text">
-                            @if (producto != null)
-                            {
-                                <span><strong>Producto:</strong> @producto.nombreProducto</span>
-                                <br />
-                                <span>@producto.descripcionProducto</span>
-                            }
-                        </p>
-                        <p class="card-text">
-                            <strong>Cantidad:</strong> @grupo.CantidadTotal<br />
-                            <strong>Monto Total:</strong> ₡@grupo.MontoTotal.ToString("#,##0.00", new System.Globalization.CultureInfo("es-CR"))
-                        </p>
-                    </section>
-                    <section class="card-footer d-flex justify-content-between">
-                        <a href="@Url.Action("EditarProductoCarrito", new { idCarrito = grupo.PrimerItem.idCarrito })" class="btn btn-warning btn-sm">
-                            <i class="bi bi-pencil-square"></i> Editar
-                        </a>
-                        <a href="@Url.Action("EliminarProductoCarrito", new { idCarrito = grupo.PrimerItem.idCarrito })" class="btn btn-danger btn-sm">
-                            <i class="bi bi-trash"></i> Eliminar
-                        </a>
-                    </section>
-                </section>
-            </section>
-        }
-    </section>
-}
-else
-{
-    <section>
-        <h1 class="text-center">No tienes artículos en el carrito.</h1>
-    </section>
-    <section class="text-center">
-        <a href="@Url.Action("productosXCategoria", "Productos")" class="btn btn-success">
-            <i class="bi bi-plus-circle"></i> Agregar productos
-        </a>
-    </section>
-}
+    }
+</section>
